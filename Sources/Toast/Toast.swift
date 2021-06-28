@@ -9,51 +9,25 @@ import UIKit
 
 class Toast: UIView {
     
-    private static let DEFAULT_AUTO_HIDE: Bool = true
-    private static let DEFAULT_SWIPE_UP_TO_HIDE: Bool = true
-    private static let DEFAULT_DISPLAY_TIME: TimeInterval = 4
-    
     private let minHeight: CGFloat = 58
     private let minWidth: CGFloat = 150
     private let hStack: UIStackView
     private let spacing: CGFloat = 10
     
-    private let autoHide: Bool
-    private let swipeUpToHide: Bool
-    private let displayTime: TimeInterval
-    
     private let startingYPoint: CGFloat = -100
-    private let animationTime: TimeInterval = 0.3
     
-    private let onTap: ((_ toast: Toast) -> ())?
+    private let config: ToastConfiguration
     
-    public init(
+    public convenience init(
         title: String,
         subtitle: String? = nil,
-        icon: UIImage? = nil,
-        autoHide: Bool = DEFAULT_AUTO_HIDE,
-        displayTime: TimeInterval = DEFAULT_DISPLAY_TIME,
-        swipeUpToHide: Bool = DEFAULT_SWIPE_UP_TO_HIDE,
-        onTap: ((_: Toast) -> ())? = nil) {
-        self.hStack = UIStackView()
-        self.onTap = onTap
-        self.autoHide = autoHide
-        self.displayTime = displayTime
-        self.swipeUpToHide = swipeUpToHide
-        super.init(frame: CGRect.zero)
-        
-        // Add to top controllers view
-        topController()?.view.addSubview(self)
-        
-        backgroundColor = .white
-        
-        hStack.axis = .horizontal
-        hStack.spacing = spacing
-        hStack.alignment = .center
-        hStack.distribution = .fillProportionally
+        config: ToastConfiguration
+    ) {
+        self.init(config: config)
         
         let vStack = UIStackView()
         vStack.axis = .vertical
+        vStack.spacing = 2
         vStack.alignment = .center
         
         let titleLabel = UILabel()
@@ -68,7 +42,30 @@ class Toast: UIView {
             vStack.addArrangedSubview(subTitleLabel)
         }
         
-        if let icon = icon {
+        hStack.addArrangedSubview(vStack)
+    }
+    
+    public convenience init(view: UIView, config: ToastConfiguration) {
+        self.init(config: config)
+        
+        hStack.addArrangedSubview(view)
+    }
+    
+    private init(config: ToastConfiguration) {
+        self.config = config
+        self.hStack = UIStackView()
+        super.init(frame: CGRect.zero)
+        
+        config.view?.addSubview(self) ?? topController()?.view.addSubview(self)
+        
+        backgroundColor = .white
+        
+        hStack.axis = .horizontal
+        hStack.spacing = spacing
+        hStack.alignment = .center
+        hStack.distribution = .fillProportionally
+        
+        if let icon = config.icon {
             let imageView = UIImageView()
             imageView.image = icon
             imageView.tintColor = .label
@@ -76,10 +73,8 @@ class Toast: UIView {
             hStack.addArrangedSubview(imageView)
         }
         
-        hStack.addArrangedSubview(vStack)
-        
         addSubview(hStack)
-    
+        
         setupGestureRecognizers()
         setupConstraints()
         setupShadow()
@@ -93,11 +88,11 @@ class Toast: UIView {
     }
     
     public func show(after delay: TimeInterval = 0) {
-        UIView.animate(withDuration: animationTime, delay: delay, options: .curveEaseOut) {
+        UIView.animate(withDuration: config.animationTime, delay: delay, options: .curveEaseOut) {
             self.transform = CGAffineTransform(translationX: 0, y: 10)
         } completion: { [self] _ in
-            if autoHide {
-                close(after: displayTime)
+            if config.autoHide {
+                close(after: config.displayTime)
             }
         }
 
@@ -108,7 +103,7 @@ class Toast: UIView {
     }
     
     public func close(after time: TimeInterval) {
-        UIView.animate(withDuration: animationTime, delay: time, options: .curveEaseOut) {
+        UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseOut) {
             self.transform = CGAffineTransform(translationX: 0, y: self.startingYPoint)
         } completion: { [self] _ in
             removeFromSuperview()
@@ -116,7 +111,7 @@ class Toast: UIView {
     }
     
     @objc private func executeOnTap() {
-        self.onTap?(self)
+        config.onTap?(self)
     }
     
     private func setupGestureRecognizers() {
