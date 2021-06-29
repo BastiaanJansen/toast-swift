@@ -9,21 +9,45 @@ import UIKit
 
 class Toast: UIView {
     
-    private let minHeight: CGFloat = 58
-    private let minWidth: CGFloat = 150
-    private let hStack: UIStackView
-    private let spacing: CGFloat = 10
-    
     private let startingYPoint: CGFloat = -100
     
     private let config: ToastConfiguration
     
-    public convenience init(
+    private var isVisible: Bool = false
+    
+    public static func text(_ title: String, subtitle: String? = nil, config: ToastConfiguration = ToastConfiguration()) -> Toast {
+        let vStack = UIStackView()
+        vStack.axis = .vertical
+        vStack.alignment = .center
+        vStack.distribution = .fillEqually
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
+        titleLabel.numberOfLines = 1
+        vStack.addArrangedSubview(titleLabel)
+        
+        if let subtitle = subtitle {
+            let subtitleLabel = UILabel()
+            subtitleLabel.text = subtitle
+            subtitleLabel.font = .systemFont(ofSize: 12, weight: .light)
+            vStack.addArrangedSubview(subtitleLabel)
+        }
+        
+        return self.init(view: vStack, config: config)
+    }
+    
+    public static func `default`(
+        image: UIImage,
         title: String,
-        subtitle: String? = nil,
-        config: ToastConfiguration
-    ) {
-        self.init(config: config)
+        subtitle: String?,
+        config: ToastConfiguration = ToastConfiguration()
+    ) -> Toast {
+        let hStack = UIStackView()
+        hStack.axis = .horizontal
+        hStack.spacing = 10
+        hStack.alignment = .center
+        hStack.distribution = .fillProportionally
         
         let vStack = UIStackView()
         vStack.axis = .vertical
@@ -32,52 +56,52 @@ class Toast: UIView {
         
         let titleLabel = UILabel()
         titleLabel.text = title
-        titleLabel.font = .systemFont(ofSize: 13, weight: .regular)
+        titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
+        titleLabel.numberOfLines = 1
         vStack.addArrangedSubview(titleLabel)
         
         if let subtitle = subtitle {
-            let subTitleLabel = UILabel()
-            subTitleLabel.text = subtitle
-            subTitleLabel.font = .systemFont(ofSize: 11, weight: .light)
-            vStack.addArrangedSubview(subTitleLabel)
+            let subtitleLabel = UILabel()
+            subtitleLabel.text = subtitle
+            subtitleLabel.font = .systemFont(ofSize: 12, weight: .light)
+            vStack.addArrangedSubview(subtitleLabel)
         }
         
+        let imageView = UIImageView()
+        imageView.image = image
+        imageView.tintColor = .label
+        imageView.contentMode = .scaleAspectFill
+        
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: 28),
+            imageView.heightAnchor.constraint(equalToConstant: 28)
+        ])
+        
+        hStack.addArrangedSubview(imageView)
         hStack.addArrangedSubview(vStack)
-    }
-    
-    public convenience init(view: UIView, config: ToastConfiguration) {
-        self.init(config: config)
         
-        hStack.addArrangedSubview(view)
+        return self.init(view: hStack, config: config)
     }
     
-    private init(config: ToastConfiguration) {
+    public static func custom(view: UIView, config: ToastConfiguration = ToastConfiguration()) -> Toast {
+        return self.init(view: view, config: config)
+    }
+    
+    public required init(view: UIView, config: ToastConfiguration) {
         self.config = config
-        self.hStack = UIStackView()
         super.init(frame: CGRect.zero)
-        
+    
         config.view?.addSubview(self) ?? topController()?.view.addSubview(self)
         
-        backgroundColor = .white
+        addSubview(view)
         
-        hStack.axis = .horizontal
-        hStack.spacing = spacing
-        hStack.alignment = .center
-        hStack.distribution = .fillProportionally
+        config.appearance.addConstraints(to: self)
+        config.appearance.style(view: self)
         
-        if let icon = config.icon {
-            let imageView = UIImageView()
-            imageView.image = icon
-            imageView.tintColor = .label
-            
-            hStack.addArrangedSubview(imageView)
-        }
-        
-        addSubview(hStack)
+        layoutIfNeeded()
         
         setupGestureRecognizers()
-        setupConstraints()
-        setupShadow()
+        addViewConstraints(to: view)
         
         transform = CGAffineTransform(translationX: 0, y: startingYPoint)
     }
@@ -88,34 +112,37 @@ class Toast: UIView {
     }
     
     public func show(after delay: TimeInterval = 0) {
+        if isVisible { return }
+        
         UIView.animate(withDuration: config.animationTime, delay: delay, options: .curveEaseOut) {
-            self.transform = CGAffineTransform(translationX: 0, y: 10)
+            self.transform = .identity
         } completion: { [self] _ in
+            isVisible = true
             if config.autoHide {
                 close(after: config.displayTime)
             }
         }
-
     }
     
     @objc public func close() {
-        close(after: 0)
+        close()
     }
     
-    public func close(after time: TimeInterval) {
-        UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseOut) {
+    public func close(after time: TimeInterval = 0, completion: (() -> ())? = nil) {
+        UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseOut, animations: {
             self.transform = CGAffineTransform(translationX: 0, y: self.startingYPoint)
-        } completion: { [self] _ in
-            removeFromSuperview()
+        }) { [self] _ in
+            isVisible = false
+            completion?()
         }
     }
     
-    @objc private func executeOnTap() {
+    @objc private func executeOnTapHandler() {
         config.onTap?(self)
     }
     
     private func setupGestureRecognizers() {
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(executeOnTap)))
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(executeOnTapHandler)))
         
         let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(close as () -> Void))
         swipeUpGestureRecognizer.direction = .up
@@ -123,42 +150,15 @@ class Toast: UIView {
         addGestureRecognizer(swipeUpGestureRecognizer)
     }
     
-    private func setupConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
-        
-        let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: minHeight)
-        let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .width, multiplier: 1, constant: minWidth)
-
-        let centerConstraint = NSLayoutConstraint(item: self, attribute: .centerX, relatedBy: .equal, toItem: superview, attribute: .centerX, multiplier: 1, constant: 0)
-        let topConstraint = NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: superview, attribute: .topMargin, multiplier: 1, constant: 0)
-
-        let leadingConstraint = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .greaterThanOrEqual, toItem: superview, attribute: .leadingMargin, multiplier: 1, constant: 10)
-        let trailingConstraint = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: superview, attribute: .trailingMargin, multiplier: 1, constant: -10)
-        
-        clipsToBounds = true
-        layer.cornerRadius = minHeight / 2
-        superview?.addConstraints([heightConstraint, widthConstraint, centerConstraint, topConstraint, leadingConstraint, trailingConstraint])
-        
-        hStackConstraints()
-    }
-    
-    private func hStackConstraints() {
-        hStack.translatesAutoresizingMaskIntoConstraints = false
+    private func addViewConstraints(to view: UIView) {
+        view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            hStack.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-            hStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
-            hStack.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 25),
-            hStack.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -25),
-            hStack.centerXAnchor.constraint(equalTo: centerXAnchor)
+            view.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            view.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 25),
+            view.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -25),
+            view.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
-    }
-    
-    private func setupShadow() {
-        layer.masksToBounds = false
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowColor = UIColor.black.withAlphaComponent(0.08).cgColor
-        layer.shadowRadius = 8
-        layer.shadowOpacity = 1
     }
     
     private func topController() -> UIViewController? {
