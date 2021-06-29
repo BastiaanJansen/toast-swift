@@ -28,9 +28,9 @@ class DefaultToastAppearance : ToastAppearance {
         self.lightBackgroundColor = lightBackgroundColor
     }
     
-    func addConstraints(to view: UIView) {
+    func addConstraints(to view: Toast) {
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+
         let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: minHeight)
         let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .width, multiplier: 1, constant: minWidth)
 
@@ -39,11 +39,11 @@ class DefaultToastAppearance : ToastAppearance {
 
         let leadingConstraint = NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .greaterThanOrEqual, toItem: view.superview, attribute: .leadingMargin, multiplier: 1, constant: 10)
         let trailingConstraint = NSLayoutConstraint(item: view, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: view.superview, attribute: .trailingMargin, multiplier: 1, constant: -10)
-        
+
         view.superview?.addConstraints([heightConstraint, widthConstraint, centerConstraint, topConstraint, leadingConstraint, trailingConstraint])
     }
     
-    func style(view: UIView) {
+    func style(view: Toast) {
         view.layoutIfNeeded()
         view.clipsToBounds = true
         view.layer.cornerRadius = view.frame.height / 2

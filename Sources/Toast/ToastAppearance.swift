@@ -9,6 +9,6 @@ import Foundation
 import UIKit
 
 protocol ToastAppearance {
-    func addConstraints(to view: UIView)
-    func style(view: UIView)
+    func addConstraints(to view: Toast)
+    func style(view: Toast)
 }

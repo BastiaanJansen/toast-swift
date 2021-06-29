@@ -9,32 +9,18 @@ import UIKit
 
 class Toast: UIView {
     
-    private let startingYPoint: CGFloat = -100
+    public let view: UIView
     
     private let config: ToastConfiguration
     
     private var isVisible: Bool = false
     
+    private var startingYPoint: CGFloat {
+        return -frame.height - 30
+    }
+    
     public static func text(_ title: String, subtitle: String? = nil, config: ToastConfiguration = ToastConfiguration()) -> Toast {
-        let vStack = UIStackView()
-        vStack.axis = .vertical
-        vStack.alignment = .center
-        vStack.distribution = .fillEqually
-        
-        let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
-        titleLabel.numberOfLines = 1
-        vStack.addArrangedSubview(titleLabel)
-        
-        if let subtitle = subtitle {
-            let subtitleLabel = UILabel()
-            subtitleLabel.text = subtitle
-            subtitleLabel.font = .systemFont(ofSize: 12, weight: .light)
-            vStack.addArrangedSubview(subtitleLabel)
-        }
-        
-        return self.init(view: vStack, config: config)
+        return self.init(view: TextToastView(title, subtitle: subtitle), config: config)
     }
     
     public static func `default`(
@@ -43,44 +29,7 @@ class Toast: UIView {
         subtitle: String?,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let hStack = UIStackView()
-        hStack.axis = .horizontal
-        hStack.spacing = 10
-        hStack.alignment = .center
-        hStack.distribution = .fillProportionally
-        
-        let vStack = UIStackView()
-        vStack.axis = .vertical
-        vStack.spacing = 2
-        vStack.alignment = .center
-        
-        let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
-        titleLabel.numberOfLines = 1
-        vStack.addArrangedSubview(titleLabel)
-        
-        if let subtitle = subtitle {
-            let subtitleLabel = UILabel()
-            subtitleLabel.text = subtitle
-            subtitleLabel.font = .systemFont(ofSize: 12, weight: .light)
-            vStack.addArrangedSubview(subtitleLabel)
-        }
-        
-        let imageView = UIImageView()
-        imageView.image = image
-        imageView.tintColor = .label
-        imageView.contentMode = .scaleAspectFill
-        
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 28),
-            imageView.heightAnchor.constraint(equalToConstant: 28)
-        ])
-        
-        hStack.addArrangedSubview(imageView)
-        hStack.addArrangedSubview(vStack)
-        
-        return self.init(view: hStack, config: config)
+        return self.init(view: DefaultToastView(image: image, title: title, subtitle: subtitle), config: config)
     }
     
     public static func custom(view: UIView, config: ToastConfiguration = ToastConfiguration()) -> Toast {
@@ -89,6 +38,7 @@ class Toast: UIView {
     
     public required init(view: UIView, config: ToastConfiguration) {
         self.config = config
+        self.view = view
         super.init(frame: CGRect.zero)
     
         config.view?.addSubview(self) ?? topController()?.view.addSubview(self)
@@ -96,12 +46,12 @@ class Toast: UIView {
         addSubview(view)
         
         config.appearance.addConstraints(to: self)
+        
+        addViewConstraints(to: view)
+        
         config.appearance.style(view: self)
         
-        layoutIfNeeded()
-        
         setupGestureRecognizers()
-        addViewConstraints(to: view)
         
         transform = CGAffineTransform(translationX: 0, y: startingYPoint)
     }
@@ -157,7 +107,6 @@ class Toast: UIView {
             view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             view.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 25),
             view.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -25),
-            view.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     
