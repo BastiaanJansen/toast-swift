@@ -135,3 +135,8 @@ let config = ToastConfiguration(
 
 let toast = toast.text("Safari pasted from Notes", config: config)
 ```
+
+## Licence
+Toast-Swift is available under the MIT licence. See the LICENCE for more info.
+
+[![Stargazers repo roster for @BastiaanJansen/Toast-Swift](https://reporoster.com/stars/BastiaanJansen/Toast-Swift)](https://github.com/BastiaanJansen/Toast-Swift/stargazers)
