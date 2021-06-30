@@ -9,10 +9,9 @@ import UIKit
 
 class Toast: UIView {
     
-    public let view: UIView
-    
+    private let view: UIView
+
     private let config: ToastConfiguration
-    
     private var isVisible: Bool = false
     
     private var startingYPoint: CGFloat {
@@ -53,7 +52,7 @@ class Toast: UIView {
         
         setupGestureRecognizers()
         
-        transform = CGAffineTransform(translationX: 0, y: startingYPoint)
+        transform = CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: startingYPoint)
     }
     
     public func show(haptic type: UINotificationFeedbackGenerator.FeedbackType, after time: TimeInterval = 0) {
@@ -79,7 +78,7 @@ class Toast: UIView {
     }
     
     public func close(after time: TimeInterval = 0, completion: (() -> ())? = nil) {
-        UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
             self.transform = CGAffineTransform(translationX: 0, y: self.startingYPoint)
         }) { [self] _ in
             isVisible = false

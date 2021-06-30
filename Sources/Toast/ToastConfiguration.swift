@@ -1,6 +1,6 @@
 //
 //  ToastConfiguration.swift
-//  ToastTest
+//  Toast
 //
 //  Created by Bastiaan Jansen on 28/06/2021.
 //
@@ -26,7 +26,7 @@ struct ToastConfiguration {
         autoHide: Bool = true,
         displayTime: TimeInterval = 4,
         swipeUpToHide: Bool = true,
-        animationTime: TimeInterval = 0.3,
+        animationTime: TimeInterval = 0.2,
         view: UIView? = nil,
         onTap: ((_: Toast) -> ())? = nil
     ) {
