@@ -87,6 +87,10 @@ class Toast: UIView {
         }
     }
     
+    public func remove() {
+        removeFromSuperview()
+    }
+    
     @objc private func executeOnTapHandler() {
         config.onTap?(self)
     }
