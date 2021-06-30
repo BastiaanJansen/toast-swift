@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class IconAppleToastView : UIStackView {
+public class IconAppleToastView : UIStackView {
     public init(image: UIImage, imageTint: UIColor? = .label, title: String, subtitle: String? = nil) {
         super.init(frame: CGRect.zero)
         axis = .horizontal
