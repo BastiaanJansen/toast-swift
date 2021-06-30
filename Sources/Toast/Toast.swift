@@ -8,7 +8,6 @@
 import UIKit
 
 class Toast {
-    
     private let view: ToastView
 
     private let config: ToastConfiguration
@@ -18,7 +17,11 @@ class Toast {
         return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
     }
     
-    public static func text(_ title: String, subtitle: String? = nil, config: ToastConfiguration = ToastConfiguration()) -> Toast {
+    public static func text(
+        _ title: String,
+        subtitle: String? = nil,
+        config: ToastConfiguration = ToastConfiguration()
+    ) -> Toast {
         let view = AppleToastView(child: TextToastView(title, subtitle: subtitle))
         return self.init(view: view, config: config)
     }
@@ -30,11 +33,16 @@ class Toast {
         subtitle: String?,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle))
+        let view = AppleToastView(
+            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle)
+        )
         return self.init(view: view, config: config)
     }
     
-    public static func custom(view: ToastView, config: ToastConfiguration = ToastConfiguration()) -> Toast {
+    public static func custom(
+        view: ToastView,
+        config: ToastConfiguration = ToastConfiguration()
+    ) -> Toast {
         return self.init(view: view, config: config)
     }
     
@@ -73,14 +81,14 @@ class Toast {
         close()
     }
     
-    public func close(after time: TimeInterval = 0, completion: (() -> ())? = nil) {
+    public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
             self.view.transform = self.initialTransform
-        }) { [self] _ in
-            isVisible = false
+        }) { _ in
+            self.isVisible = false
             
-            if config.removeFromView {
-                remove()
+            if self.config.removeFromView {
+                self.remove()
             }
             
             completion?()

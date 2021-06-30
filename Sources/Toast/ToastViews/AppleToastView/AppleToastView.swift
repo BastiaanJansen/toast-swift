@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class AppleToastView : UIView, ToastView {
-    
     private let minHeight: CGFloat
     private let minWidth: CGFloat
 
@@ -67,7 +66,7 @@ class AppleToastView : UIView, ToastView {
             child.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             child.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             child.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
-            child.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
+            child.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25)
         ])
     }
     

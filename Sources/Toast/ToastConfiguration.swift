@@ -9,14 +9,13 @@ import Foundation
 import UIKit
 
 struct ToastConfiguration {
-    
     public let autoHide: Bool
     public let displayTime: TimeInterval
     public let swipeUpToHide: Bool
     public let animationTime: TimeInterval
     public let removeFromView: Bool
     
-    public let onTap: ((_: Toast) -> ())?
+    public let onTap: ((Toast) -> Void)?
     
     public let view: UIView?
     
@@ -27,7 +26,7 @@ struct ToastConfiguration {
         animationTime: TimeInterval = 0.2,
         removeFromView: Bool = false,
         view: UIView? = nil,
-        onTap: ((_: Toast) -> ())? = nil
+        onTap: ((Toast) -> Void)? = nil
     ) {
         self.autoHide = autoHide
         self.displayTime = displayTime
