@@ -2,14 +2,18 @@
 
 A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
 
-<div align="center">
-  <img src="Screenshots/Text.png" width="220px">
-  <img src="Screenshots/Airpods%20Pro.png" width="220px">
-  <img src="Screenshots/Airpods%20Max.png" width="220px">
+<div>
+  <div>
+    <img src="Screenshots/Text.png" width="250px">
+    <img src="Screenshots/Airpods-Pro.png" width="250px">
+    <img src="Screenshots/Airpods-Max.png" width="250px">
+  <div>
   
-  <img src="Screenshots/Text%20Dark.png" width="220px">
-  <img src="Screenshots/Airpods%20Pro%20Dark.png" width="220px">
-  <img src="Screenshots/Airpods%20Max%20Dark.png" width="220px">
+  <div>
+    <img src="Screenshots/Text-Dark.png" width="250px">
+    <img src="Screenshots/Airpods-Pro-Dark.png" width="250px">
+    <img src="Screenshots/Airpods-Max-Dark.png" width="250px">
+  </div>
 </div>
 
 ## Installation
@@ -69,7 +73,7 @@ let config = ToastConfiguration(
   displayTime: 5,
   swipeUpToHide: true,
   animationTime: 0.2,
-  onTap: { Toast in
+  onTap: { toast in
       toast.close()
   }
 )
