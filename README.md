@@ -22,6 +22,30 @@ A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
 
 ## Installation
 
+### Swift Package Manager
+You can use The Swift Package Manager to install Toast-Swift by adding the description to your Package.swift file:
+```swift
+import PackageDescription
+
+let package = Package(
+    name: "YOUR PROJECT NAME",
+    targets: [],
+    dependencies: [
+        .package(url: "https://github.com/BastiaanJansen/Toast-Swift", from: "1.0.0")
+    ]
+)
+```
+
+Next, add SwifterSwift to your targets dependencies like so:
+```swift
+.target(
+    name: "YOUR PROJECT NAME",
+    dependencies: [
+        "Toast",
+    ]
+),
+```
+
 ## Usage
 To create a simple text based toast:
 ```swift
