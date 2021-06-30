@@ -52,7 +52,7 @@ class CustomToastView : UIView, ToastView {
     }
 
     func viewDidLoad() {
-        // View is added to superview, create layout and add constraints
+        // View is added to superview, create and style layout and add constraints
     }
 }
 ```
