@@ -14,8 +14,8 @@ class Toast: UIView {
     private let config: ToastConfiguration
     private var isVisible: Bool = false
     
-    private var startingYPoint: CGFloat {
-        return -frame.height - 30
+    private var initialTransform: CGAffineTransform {
+        return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
     }
     
     public static func text(_ title: String, subtitle: String? = nil, config: ToastConfiguration = ToastConfiguration()) -> Toast {
@@ -24,11 +24,12 @@ class Toast: UIView {
     
     public static func `default`(
         image: UIImage,
+        imageTint: UIColor? = .label,
         title: String,
         subtitle: String?,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        return self.init(view: DefaultToastView(image: image, title: title, subtitle: subtitle), config: config)
+        return self.init(view: DefaultToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle), config: config)
     }
     
     public static func custom(view: UIView, config: ToastConfiguration = ToastConfiguration()) -> Toast {
@@ -38,7 +39,7 @@ class Toast: UIView {
     public required init(view: UIView, config: ToastConfiguration) {
         self.config = config
         self.view = view
-        super.init(frame: CGRect.zero)
+        super.init(frame: .zero)
     
         config.view?.addSubview(self) ?? topController()?.view.addSubview(self)
         
@@ -52,7 +53,7 @@ class Toast: UIView {
         
         setupGestureRecognizers()
         
-        transform = CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: startingYPoint)
+        transform = initialTransform
     }
     
     public func show(haptic type: UINotificationFeedbackGenerator.FeedbackType, after time: TimeInterval = 0) {
@@ -61,7 +62,7 @@ class Toast: UIView {
     }
     
     public func show(after delay: TimeInterval = 0) {
-        if isVisible { return }
+        guard !isVisible else { return }
         
         UIView.animate(withDuration: config.animationTime, delay: delay, options: .curveEaseOut) {
             self.transform = .identity
@@ -79,7 +80,7 @@ class Toast: UIView {
     
     public func close(after time: TimeInterval = 0, completion: (() -> ())? = nil) {
         UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
-            self.transform = CGAffineTransform(translationX: 0, y: self.startingYPoint)
+            self.transform = self.initialTransform
         }) { [self] _ in
             isVisible = false
             completion?()

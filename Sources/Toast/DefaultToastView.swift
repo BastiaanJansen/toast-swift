@@ -10,7 +10,7 @@ import UIKit
 
 class DefaultToastView : UIStackView {
     
-    public init(image: UIImage, title: String, subtitle: String? = nil) {
+    public init(image: UIImage, imageTint: UIColor? = .label, title: String, subtitle: String? = nil) {
         super.init(frame: CGRect.zero)
         axis = .horizontal
         spacing = 15
@@ -37,8 +37,8 @@ class DefaultToastView : UIStackView {
         
         let imageView = UIImageView()
         imageView.image = image
-        imageView.tintColor = .label
-        imageView.contentMode = .scaleAspectFill
+        imageView.tintColor = imageTint
+        imageView.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 28),
