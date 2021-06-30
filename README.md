@@ -73,7 +73,7 @@ let config = ToastConfiguration(
   displayTime: 5,
   swipeUpToHide: true,
   animationTime: 0.2,
-  onTap: { Toast in
+  onTap: { toast in
       toast.close()
   }
 )
