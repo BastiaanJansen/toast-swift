@@ -84,7 +84,7 @@ class Toast {
     public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
             self.view.transform = self.initialTransform
-        }) { _ in
+        }, completion: { _ in
             self.isVisible = false
             
             if self.config.removeFromView {
@@ -92,7 +92,7 @@ class Toast {
             }
             
             completion?()
-        }
+        })
     }
     
     public func remove() {
