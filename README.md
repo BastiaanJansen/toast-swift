@@ -4,15 +4,15 @@ A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
 
 <div>
   <div>
-    <img src="Screenshots/Text.png" width="240px">
-    <img src="Screenshots/Airpods-Pro.png" width="240px">
-    <img src="Screenshots/Airpods-Max.png" width="240px">
+    <img src="Screenshots/Text.png" width="250px">
+    <img src="Screenshots/Airpods-Pro.png" width="250px">
+    <img src="Screenshots/Airpods-Max.png" width="250px">
   <div>
   
   <div>
-    <img src="Screenshots/Text-Dark.png" width="240px">
-    <img src="Screenshots/Airpods-Pro-Dark.png" width="240px">
-    <img src="Screenshots/Airpods-Max-Dark.png" width="240px">
+    <img src="Screenshots/Text-Dark.png" width="250px">
+    <img src="Screenshots/Airpods-Pro-Dark.png" width="250px">
+    <img src="Screenshots/Airpods-Max-Dark.png" width="250px">
   </div>
 </div>
 
