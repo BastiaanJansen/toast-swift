@@ -6,7 +6,10 @@ A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
   <img src="Screenshots/Text.png" width="220px">
   <img src="Screenshots/Airpods%20Pro.png" width="220px">
   <img src="Screenshots/Airpods%20Max.png" width="220px">
-  <img src="Screenshots/Silent%20Mode.png" width="220px">
+  
+  <img src="Screenshots/Text%20Dark.png" width="220px">
+  <img src="Screenshots/Airpods%20Pro%20Dark.png" width="220px">
+  <img src="Screenshots/Airpods%20Max%20Dark.png" width="220px">
 </div>
 
 ## Installation
@@ -42,7 +45,7 @@ let toast = Toast.custom(view: view)
 toast.show()
 ```
 
-The `show` method accepts several parameters. `haptic` of type `UINotificationFeedbackGenerator.FeedbackType` to use haptics and `after` of type `TimeInterval` to show the toast after a certain amount of time:
+The `show` method accepts several optional parameters. `haptic` of type `UINotificationFeedbackGenerator.FeedbackType` to use haptics and `after` of type `TimeInterval` to show the toast after a certain amount of time:
 ```swift
 toast.show(haptic: .success, after: 1)
 ```
