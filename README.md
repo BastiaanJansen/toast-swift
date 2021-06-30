@@ -36,7 +36,7 @@ let package = Package(
 )
 ```
 
-Next, add SwifterSwift to your targets dependencies like so:
+Next, add Toast-Swift to your targets dependencies:
 ```swift
 .target(
     name: "YOUR PROJECT NAME",
