@@ -7,9 +7,9 @@
 
 import UIKit
 
-class Toast: UIView {
+class Toast {
     
-    private let view: UIView
+    private let view: ToastView
 
     private let config: ToastConfiguration
     private var isVisible: Bool = false
@@ -19,7 +19,8 @@ class Toast: UIView {
     }
     
     public static func text(_ title: String, subtitle: String? = nil, config: ToastConfiguration = ToastConfiguration()) -> Toast {
-        return self.init(view: TextToastView(title, subtitle: subtitle), config: config)
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle))
+        return self.init(view: view, config: config)
     }
     
     public static func `default`(
@@ -29,31 +30,25 @@ class Toast: UIView {
         subtitle: String?,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        return self.init(view: DefaultToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle), config: config)
-    }
-    
-    public static func custom(view: UIView, config: ToastConfiguration = ToastConfiguration()) -> Toast {
+        let view = AppleToastView(child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle))
         return self.init(view: view, config: config)
     }
     
-    public required init(view: UIView, config: ToastConfiguration) {
+    public static func custom(view: ToastView, config: ToastConfiguration = ToastConfiguration()) -> Toast {
+        return self.init(view: view, config: config)
+    }
+    
+    public required init(view: ToastView, config: ToastConfiguration) {
         self.config = config
         self.view = view
-        super.init(frame: .zero)
     
-        config.view?.addSubview(self) ?? topController()?.view.addSubview(self)
+        config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
         
-        addSubview(view)
-        
-        config.appearance.addConstraints(to: self)
-        
-        addViewConstraints(to: view)
-        
-        config.appearance.style(view: self)
+        view.viewDidLoad()
         
         setupGestureRecognizers()
         
-        transform = initialTransform
+        view.transform = initialTransform
     }
     
     public func show(haptic type: UINotificationFeedbackGenerator.FeedbackType, after time: TimeInterval = 0) {
@@ -65,7 +60,7 @@ class Toast: UIView {
         guard !isVisible else { return }
         
         UIView.animate(withDuration: config.animationTime, delay: delay, options: .curveEaseOut) {
-            self.transform = .identity
+            self.view.transform = .identity
         } completion: { [self] _ in
             isVisible = true
             if config.autoHide {
@@ -80,7 +75,7 @@ class Toast: UIView {
     
     public func close(after time: TimeInterval = 0, completion: (() -> ())? = nil) {
         UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
-            self.transform = self.initialTransform
+            self.view.transform = self.initialTransform
         }) { [self] _ in
             isVisible = false
             completion?()
@@ -88,7 +83,7 @@ class Toast: UIView {
     }
     
     public func remove() {
-        removeFromSuperview()
+        view.removeFromSuperview()
     }
     
     @objc private func executeOnTapHandler() {
@@ -96,22 +91,12 @@ class Toast: UIView {
     }
     
     private func setupGestureRecognizers() {
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(executeOnTapHandler)))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(executeOnTapHandler)))
         
         let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(close as () -> Void))
         swipeUpGestureRecognizer.direction = .up
         
-        addGestureRecognizer(swipeUpGestureRecognizer)
-    }
-    
-    private func addViewConstraints(to view: UIView) {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            view.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 25),
-            view.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -25),
-        ])
+        view.addGestureRecognizer(swipeUpGestureRecognizer)
     }
     
     private func topController() -> UIViewController? {

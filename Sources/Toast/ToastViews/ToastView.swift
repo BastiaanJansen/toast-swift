@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-protocol ToastAppearance {
-    func addConstraints(to view: Toast)
-    func style(view: Toast)
+protocol ToastView : UIView {
+    func viewDidLoad()
 }

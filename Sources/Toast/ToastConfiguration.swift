@@ -10,8 +10,6 @@ import UIKit
 
 struct ToastConfiguration {
     
-    public let appearance: ToastAppearance
-    
     public let autoHide: Bool
     public let displayTime: TimeInterval
     public let swipeUpToHide: Bool
@@ -22,7 +20,6 @@ struct ToastConfiguration {
     public let view: UIView?
     
     public init(
-        appearance: ToastAppearance = DefaultToastAppearance(),
         autoHide: Bool = true,
         displayTime: TimeInterval = 4,
         swipeUpToHide: Bool = true,
@@ -30,7 +27,6 @@ struct ToastConfiguration {
         view: UIView? = nil,
         onTap: ((_: Toast) -> ())? = nil
     ) {
-        self.appearance = appearance
         self.autoHide = autoHide
         self.displayTime = displayTime
         self.swipeUpToHide = swipeUpToHide
