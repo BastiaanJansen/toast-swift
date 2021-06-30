@@ -34,7 +34,7 @@ public class AppleToastView : UIView, ToastView {
         addSubview(child)
     }
     
-    func viewDidLoad() {
+    public func viewDidLoad() {
         guard let superview = superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
         

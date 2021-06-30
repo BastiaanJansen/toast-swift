@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class TextToastView : UIStackView {
+class TextToastView : UIStackView {
     public init(_ title: String, subtitle: String? = nil) {
         super.init(frame: CGRect.zero)
         axis = .vertical
