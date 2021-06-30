@@ -3,13 +3,17 @@
 A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
 
 <div align="center">
-  <img src="Screenshots/Text.png" width="220px">
-  <img src="Screenshots/Airpods-Pro.png" width="220px">
-  <img src="Screenshots/Airpods-Max.png" width="220px">
+  <div>
+    <img src="Screenshots/Text.png" width="220px">
+    <img src="Screenshots/Airpods-Pro.png" width="220px">
+    <img src="Screenshots/Airpods-Max.png" width="220px">
+  <div>
   
-  <img src="Screenshots/Text-Dark.png" width="220px">
-  <img src="Screenshots/Airpods-Pro-Dark.png" width="220px">
-  <img src="Screenshots/Airpods-Max-Dark.png" width="220px">
+  <div>
+    <img src="Screenshots/Text-Dark.png" width="220px">
+    <img src="Screenshots/Airpods-Pro-Dark.png" width="220px">
+    <img src="Screenshots/Airpods-Max-Dark.png" width="220px">
+  </div>
 </div>
 
 ## Installation
