@@ -49,14 +49,15 @@ toast.show(haptic: .success, after: 1)
 
 The `text`, `default` and `custom` methods support custom configuration options. The following options are available:
 
-|      Name     |       Type      | Default |
-|:-------------:|:---------------:|:-------:|
-|    autoHide   |      `Bool`     |  `true` |
-|  displayTime  |  `TimeInterval` |   `4`   |
-| swipeUpToHide |      `Bool`     |  `true` |
-| animationTime |  `TimeInterval` |  `0.2`  |
-|      view     |     `UIView`    |  `nil`  |
-|     onTap     | `(Toast) -> ()` |  `nil`  |
+|      Name     |        Type       |          Default         |
+|:-------------:|:-----------------:|:------------------------:|
+|    autoHide   |       `Bool`      |          `true`          |
+|  displayTime  |   `TimeInterval`  |            `4`           |
+| swipeUpToHide |       `Bool`      |          `true`          |
+| animationTime |   `TimeInterval`  |           `0.2`          |
+|      view     |      `UIView`     |           `nil`          |
+|     onTap     |  `(Toast) -> ()`  |           `nil`          |
+|   appearance  | `ToastAppearance` | `DefaultToastAppearance` |
 
 
 ```swift
