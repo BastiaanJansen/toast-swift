@@ -78,6 +78,11 @@ class Toast {
             self.view.transform = self.initialTransform
         }) { [self] _ in
             isVisible = false
+            
+            if config.removeFromView {
+                remove()
+            }
+            
             completion?()
         }
     }

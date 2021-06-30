@@ -14,6 +14,7 @@ struct ToastConfiguration {
     public let displayTime: TimeInterval
     public let swipeUpToHide: Bool
     public let animationTime: TimeInterval
+    public let removeFromView: Bool
     
     public let onTap: ((_: Toast) -> ())?
     
@@ -24,6 +25,7 @@ struct ToastConfiguration {
         displayTime: TimeInterval = 4,
         swipeUpToHide: Bool = true,
         animationTime: TimeInterval = 0.2,
+        removeFromView: Bool = false,
         view: UIView? = nil,
         onTap: ((_: Toast) -> ())? = nil
     ) {
@@ -31,6 +33,7 @@ struct ToastConfiguration {
         self.displayTime = displayTime
         self.swipeUpToHide = swipeUpToHide
         self.animationTime = animationTime
+        self.removeFromView = removeFromView
         self.view = view
         self.onTap = onTap
     }
