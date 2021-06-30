@@ -8,6 +8,6 @@
 import Foundation
 import UIKit
 
-protocol ToastView : UIView {
+public protocol ToastView : UIView {
     func viewDidLoad()
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Toast {
+public class Toast {
     private let view: ToastView
 
     private let config: ToastConfiguration

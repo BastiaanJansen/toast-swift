@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct ToastConfiguration {
+public struct ToastConfiguration {
     public let autoHide: Bool
     public let displayTime: TimeInterval
     public let swipeUpToHide: Bool

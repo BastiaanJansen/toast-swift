@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class AppleToastView : UIView, ToastView {
+public class AppleToastView : UIView, ToastView {
     private let minHeight: CGFloat
     private let minWidth: CGFloat
 
