@@ -4,7 +4,7 @@
 ![](https://img.shields.io/github/license/BastiaanJansen/Toast-Swift)
 ![](https://img.shields.io/github/issues/BastiaanJansen/Toast-Swift)
 
-A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
+A Swift Toast view - iOS 14 style - built with UIKit. 🍞
 
 <div align="center">
   <div>
