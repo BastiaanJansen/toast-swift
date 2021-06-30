@@ -2,7 +2,7 @@
 
 A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
 
-<div align="center">
+<div>
   <div>
     <img src="Screenshots/Text.png" width="220px">
     <img src="Screenshots/Airpods-Pro.png" width="220px">
