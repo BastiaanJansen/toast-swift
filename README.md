@@ -1,5 +1,9 @@
 # Toast-Swift
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/91d3addee9e94a0cad9436601d4a4e1e)](https://www.codacy.com/gh/BastiaanJansen/Toast-Swift/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BastiaanJansen/Toast-Swift&amp;utm_campaign=Badge_Grade)
+![](https://img.shields.io/github/license/BastiaanJansen/Toast-Swift)
+![](https://img.shields.io/github/issues/BastiaanJansen/Toast-Swift)
+
 A Swift Toast view - iOS 14 and newer style - built with UIKit. 🍞
 
 <div align="center">
