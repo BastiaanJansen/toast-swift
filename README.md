@@ -46,7 +46,7 @@ toast.show()
 ```
 
 ### Custom toast view
-You don't like the default Apple style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
+Don't like the default Apple style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
 ```swift
 class CustomToastView : UIView, ToastView {
     private let text: String
