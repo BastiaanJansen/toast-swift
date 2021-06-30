@@ -69,8 +69,18 @@ let toast = Toast.default(
 toast.show()
 ```
 
+Want to use a different layout, but still use the Apple style? Create your own view and inject it into the `AppleToastView` class when creating a custom toast:
+```swift
+let customView: UIView = // Custom view
+
+let appleToastView = AppleToastView(child: customView)
+
+let toast = Toast.custom(view: appleToastView)
+toast.show()
+```
+
 ### Custom toast view
-Don't like the default Apple style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
+Don't like the default Apple'ish style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
 ```swift
 class CustomToastView : UIView, ToastView {
     private let text: String
@@ -117,7 +127,7 @@ let config = ToastConfiguration(
     displayTime: 5,
     swipeUpToHide: true,
     animationTime: 0.2,
-    removeFromView: true,
+    removeFromView: true, // When enabled, you can only call .show() once. After the toast is closed, it will be removed from the view.
     onTap: { toast in
       toast.close()
     }
