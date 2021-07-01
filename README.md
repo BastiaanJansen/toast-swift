@@ -79,29 +79,6 @@ let toast = Toast.custom(view: appleToastView)
 toast.show()
 ```
 
-### Custom toast view
-Don't like the default Apple'ish style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
-```swift
-class CustomToastView : UIView, ToastView {
-    private let text: String
-
-    public init(text: String) {
-        self.text = text
-    }
-
-    func viewDidLoad() {
-        // View is added to superview, create and style layout and add constraints
-    }
-}
-```
-Use your custom view with the `custom` construct method on `Toast`:
-```swift
-let customToastView: ToastView = CustomToastView(text: "Safari pasted from Notes")
-
-let toast = Toast.custom(view: customToastView)
-toast.show()
-```
-
 The `show` method accepts several optional parameters. `haptic` of type `UINotificationFeedbackGenerator.FeedbackType` to use haptics and `after` of type `TimeInterval` to show the toast after a certain amount of time:
 ```swift
 toast.show(haptic: .success, after: 1)
@@ -134,6 +111,29 @@ let config = ToastConfiguration(
 )
 
 let toast = toast.text("Safari pasted from Notes", config: config)
+```
+
+### Custom toast view
+Don't like the default Apple'ish style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
+```swift
+class CustomToastView : UIView, ToastView {
+    private let text: String
+
+    public init(text: String) {
+        self.text = text
+    }
+
+    func viewDidLoad() {
+        // View is added to superview, create and style layout and add constraints
+    }
+}
+```
+Use your custom view with the `custom` construct method on `Toast`:
+```swift
+let customToastView: ToastView = CustomToastView(text: "Safari pasted from Notes")
+
+let toast = Toast.custom(view: customToastView)
+toast.show()
 ```
 
 ## Licence
