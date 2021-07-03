@@ -94,7 +94,7 @@ The `text`, `default` and `custom` methods support custom configuration options.
 |  swipeUpToHide |      `Bool`     |  `true` |
 |  animationTime |  `TimeInterval` |  `0.2`  |
 | removeFromView | `Bool`          | `false` |
-|      view      |     `UIView`    |  `nil`  |
+|     attachTo   |     `UIView`    |  `nil`  |
 |      onTap     | `(Toast) -> ()` |  `nil`  |
 
 
