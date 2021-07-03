@@ -32,7 +32,6 @@ public class Toast {
         return self.init(view: view, config: config)
     }
     
-    
     /// Creates a new Toast with the default Apple style layout with an icon, title and optional subtitle.
     /// - Parameters:
     ///   - image: Image which is displayed in the toast view
@@ -53,7 +52,6 @@ public class Toast {
         )
         return self.init(view: view, config: config)
     }
-    
     
     /// Creates a new Toast with a custom view
     /// - Parameters:
@@ -85,7 +83,6 @@ public class Toast {
         view.transform = initialTransform
     }
     
-    
     /// Show the toast with haptic feedback
     /// - Parameters:
     ///   - type: Haptic feedback type
@@ -94,7 +91,6 @@ public class Toast {
         UINotificationFeedbackGenerator().notificationOccurred(type)
         show(after: time)
     }
-    
     
     /// Show the toast
     /// - Parameter delay: Time after which the toast is shown
@@ -111,14 +107,11 @@ public class Toast {
         }
     }
     
-    
-    
     /// Immediately close the toast
     /// - Parameter completion: A completion handler which is invoked after the toast is hidden
     @objc public func close(completion: (() -> Void)? = nil) {
         close(completion: completion)
     }
-    
     
     /// Close the toast
     /// - Parameters:
@@ -138,8 +131,7 @@ public class Toast {
         })
     }
     
-    
-    /// Remove the toast view from the superview
+    /// Remove the toast view from the superview. When invoked, the toast cannot be shown again and the reference to this object should be destroyed.
     public func remove() {
         view.removeFromSuperview()
     }
