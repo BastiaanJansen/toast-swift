@@ -107,17 +107,11 @@ public class Toast {
         }
     }
     
-    /// Immediately close the toast
-    /// - Parameter completion: A completion handler which is invoked after the toast is hidden
-    @objc public func close(completion: (() -> Void)? = nil) {
-        close(completion: completion)
-    }
-    
     /// Close the toast
     /// - Parameters:
     ///   - time: Time after which the toast will be closed
     ///   - completion: A completion handler which is invoked after the toast is hidden
-    public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
+    @objc public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
             self.view.transform = self.initialTransform
         }, completion: { _ in
@@ -143,7 +137,7 @@ public class Toast {
     private func setupGestureRecognizers() {
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(executeOnTapHandler)))
         
-        let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(close as ((() -> Void)?) -> Void))
+        let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(close as (TimeInterval, (() -> Void)?) -> Void))
         swipeUpGestureRecognizer.direction = .up
         
         view.addGestureRecognizer(swipeUpGestureRecognizer)
