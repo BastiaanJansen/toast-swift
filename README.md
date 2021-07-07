@@ -32,7 +32,7 @@ dependencies: [
 
 ### CocoaPods
 ```swift
-pod "Toast"
+pod "ToastViewSwift"
 ```
 
 ## Usage
