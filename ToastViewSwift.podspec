@@ -15,8 +15,8 @@ Pod::Spec.new do |spec|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  spec.name         = "Toast"
-  spec.version      = "1.0.2"
+  spec.name         = "ToastViewSwift"
+  spec.version      = ENV['LIB_VERSION'] || "1.0"
   spec.summary      = "A Swift Toast view - iOS 14 style and newer - built with UIKit. 🍞"
 
   # This description is used to generate tags and improve search results.
