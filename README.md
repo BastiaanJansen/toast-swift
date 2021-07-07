@@ -30,6 +30,11 @@ dependencies: [
 ]
 ```
 
+### CocoaPods
+```swift
+pod "Toast"
+```
+
 ## Usage
 To create a simple text based toast:
 ```swift
