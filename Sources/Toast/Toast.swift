@@ -135,9 +135,9 @@ public class Toast {
     }
     
     private func setupGestureRecognizers() {
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(executeOnTapHandler)))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: view, action: #selector(executeOnTapHandler)))
         
-        let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(close as (TimeInterval, (() -> Void)?) -> Void))
+        let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: view, action: #selector(close as (TimeInterval, (() -> Void)?) -> Void))
         swipeUpGestureRecognizer.direction = .up
         
         view.addGestureRecognizer(swipeUpGestureRecognizer)
