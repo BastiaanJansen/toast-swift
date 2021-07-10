@@ -44,7 +44,7 @@ public class Toast {
         image: UIImage,
         imageTint: UIColor? = .label,
         title: String,
-        subtitle: String?,
+        subtitle: String? = nil,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
         let view = AppleToastView(
