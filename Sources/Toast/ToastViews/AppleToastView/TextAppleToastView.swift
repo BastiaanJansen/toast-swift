@@ -23,8 +23,9 @@ public class TextToastView : UIStackView {
         
         if let subtitle = subtitle {
             let subtitleLabel = UILabel()
+            subtitleLabel.textColor = .systemGray
             subtitleLabel.text = subtitle
-            subtitleLabel.font = .systemFont(ofSize: 12, weight: .light)
+            subtitleLabel.font = .systemFont(ofSize: 12, weight: .bold)
             addArrangedSubview(subtitleLabel)
         }
     }

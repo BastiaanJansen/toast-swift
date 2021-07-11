@@ -8,10 +8,9 @@
 import UIKit
 
 public class Toast {
-    private let view: ToastView
+    public let view: ToastView
 
     private let config: ToastConfiguration
-    private var isVisible: Bool = false
     
     private var initialTransform: CGAffineTransform {
         return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
@@ -73,12 +72,6 @@ public class Toast {
     public required init(view: ToastView, config: ToastConfiguration) {
         self.config = config
         self.view = view
-    
-        config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
-        
-        view.viewDidLoad()
-        
-        setupGestureRecognizers()
         
         view.transform = initialTransform
     }
@@ -95,12 +88,12 @@ public class Toast {
     /// Show the toast
     /// - Parameter delay: Time after which the toast is shown
     public func show(after delay: TimeInterval = 0) {
-        guard !isVisible else { return }
+        config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
+        view.createView(for: self)
         
-        UIView.animate(withDuration: config.animationTime, delay: delay, options: .curveEaseOut) {
+        UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.view.transform = .identity
         } completion: { [self] _ in
-            isVisible = true
             if config.autoHide {
                 close(after: config.displayTime)
             }
@@ -112,35 +105,12 @@ public class Toast {
     ///   - time: Time after which the toast will be closed
     ///   - completion: A completion handler which is invoked after the toast is hidden
     @objc public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
-        UIView.animate(withDuration: config.animationTime, delay: time, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: config.animationTime, delay: time, options: [.curveEaseIn, .allowUserInteraction], animations: {
             self.view.transform = self.initialTransform
         }, completion: { _ in
-            self.isVisible = false
-            
-            if self.config.removeFromView {
-                self.remove()
-            }
-            
+            self.view.removeFromSuperview()
             completion?()
         })
-    }
-    
-    /// Remove the toast view from the superview. When invoked, the toast cannot be shown again and the reference to this object should be destroyed.
-    public func remove() {
-        view.removeFromSuperview()
-    }
-    
-    @objc private func executeOnTapHandler() {
-        config.onTap?(self)
-    }
-    
-    private func setupGestureRecognizers() {
-        view.addGestureRecognizer(UITapGestureRecognizer(target: view, action: #selector(executeOnTapHandler)))
-        
-        let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: view, action: #selector(close as (TimeInterval, (() -> Void)?) -> Void))
-        swipeUpGestureRecognizer.direction = .up
-        
-        view.addGestureRecognizer(swipeUpGestureRecognizer)
     }
     
     private func topController() -> UIViewController? {

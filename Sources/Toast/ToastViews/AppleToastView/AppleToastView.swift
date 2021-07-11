@@ -17,6 +17,8 @@ public class AppleToastView : UIView, ToastView {
     
     private let child: UIView
     
+    private var toast: Toast?
+    
     public init(
         child: UIView,
         minHeight: CGFloat = 58,
@@ -34,7 +36,8 @@ public class AppleToastView : UIView, ToastView {
         addSubview(child)
     }
     
-    public func viewDidLoad() {
+    public func createView(for toast: Toast) {
+        self.toast = toast
         guard let superview = superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
         
