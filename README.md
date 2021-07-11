@@ -81,27 +81,19 @@ toast.show(haptic: .success, after: 1)
 
 ### Configuration options    
 The `text`, `default` and `custom` methods support custom configuration options. The following options are available:
-|      Name      | Description                                                                                     |       Type      | Default |
-|:--------------:|-------------------------------------------------------------------------------------------------|:---------------:|:-------:|
-|    autoHide    | When set to true, the toast will automatically close itself after display time has elapsed.     |      `Bool`     |  `true` |
-|   displayTime  | The duration the toast will be displayed before it will close when autoHide set to true.        |  `TimeInterval` |   `4`   |
-|  swipeUpToHide | When set to true, the user can swipe up on the toast view to close it.                          |      `Bool`     |  `true` |
-|  animationTime | Duration of the show and close animation.                                                       |  `TimeInterval` |  `0.2`  |
-| removeFromView | When set to true, the toast view will automatically be removed from the super view when closed. |      `Bool`     | `false` |
-|    attachTo    | The view which the toast view will be attached to.                                              |     `UIView`    |  `nil`  |
-|      onTap     | A function which will be invoked when the user taps on the toast view.                          | `(Toast) -> ()` |  `nil`  |
+|      Name        | Description                                                                                     |       Type      | Default |
+|:----------------:|-------------------------------------------------------------------------------------------------|:---------------:|:-------:|
+|    `autoHide`    | When set to true, the toast will automatically close itself after display time has elapsed.     |      `Bool`     |  `true` |
+|   `displayTime`  | The duration the toast will be displayed before it will close when autoHide set to true.        |  `TimeInterval` |   `4`   |
+|  `animationTime` | Duration of the show and close animation.                                                       |  `TimeInterval` |  `0.2`  |
+|    `attachTo`    | The view which the toast view will be attached to.                                              |     `UIView`    |  `nil`  |
 
 
 ```swift
 let config = ToastConfiguration(
     autoHide: true,
     displayTime: 5,
-    swipeUpToHide: true,
-    animationTime: 0.2,
-    removeFromView: true, // When enabled, you can only call .show() once. After the toast is closed, it will be removed from the view.
-    onTap: { toast in
-      toast.close()
-    }
+    animationTime: 0.2
 )
 
 let toast = toast.text("Safari pasted from Notes", config: config)
@@ -117,7 +109,7 @@ class CustomToastView : UIView, ToastView {
         self.text = text
     }
 
-    func viewDidLoad() {
+    func createView(for toast: Toast) {
         // View is added to superview, create and style layout and add constraints
     }
 }
