@@ -11,7 +11,6 @@ import UIKit
 public struct ToastConfiguration {
     public let autoHide: Bool
     public let displayTime: TimeInterval
-    public let swipeUpToHide: Bool
     public let animationTime: TimeInterval
     
     public let view: UIView?
@@ -28,13 +27,11 @@ public struct ToastConfiguration {
     public init(
         autoHide: Bool = true,
         displayTime: TimeInterval = 4,
-        swipeUpToHide: Bool = true,
         animationTime: TimeInterval = 0.2,
         attachTo view: UIView? = nil
     ) {
         self.autoHide = autoHide
         self.displayTime = displayTime
-        self.swipeUpToHide = swipeUpToHide
         self.animationTime = animationTime
         self.view = view
     }
