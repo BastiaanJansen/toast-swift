@@ -20,10 +20,8 @@ public struct ToastConfiguration {
     /// - Parameters:
     ///   - autoHide: When set to true, the toast will automatically close itself after display time has elapsed.
     ///   - displayTime: The duration the toast will be displayed before it will close when autoHide set to true.
-    ///   - swipeUpToHide: When set to true, the user can swipe up on the toast view to close it.
     ///   - animationTime:Duration of the animation
     ///   - attachTo: The view on which the toast view will be attached.
-    ///   - onTap: A function which will be invoked when the user taps on the toast view.
     public init(
         autoHide: Bool = true,
         displayTime: TimeInterval = 4,
