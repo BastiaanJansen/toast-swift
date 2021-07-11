@@ -14,9 +14,15 @@ A Swift Toast view - iOS 14 style - built with UIKit. 🍞
   </div>
 
   <div>
-    <img src="Screenshots/Text-Dark.png" width="250px">
-    <img src="Screenshots/Airpods-Pro-Dark.png" width="250px">
-    <img src="Screenshots/Airpods-Max-Dark.png" width="250px">
+    <img src="Screenshots/Airtag-Dark.png" width="250px">
+    <img src="Screenshots/Apple-Watch-Dark.png" width="250px">
+    <img src="Screenshots/Song-Downloaded-Dark.png" width="250px">
+  </div>
+  
+  <div>
+    <img src="Screenshots/HomePod.png" width="250px">
+    <img src="Screenshots/Car.png" width="250px">
+    <img src="Screenshots/Apple-TV-Remote.png" width="250px">
   </div>
 </div>
 
