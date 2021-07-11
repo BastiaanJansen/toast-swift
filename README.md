@@ -22,7 +22,7 @@ A Swift Toast view - iOS 14 style - built with UIKit. 🍞
   <div>
     <img src="Screenshots/HomePod.png" width="250px">
     <img src="Screenshots/Car.png" width="250px">
-    <img src="Screenshots/Apple-TV-Remote.png" width="250px">
+    <img src="Screenshots/AppleTV-Remote.png" width="250px">
   </div>
 </div>
 
