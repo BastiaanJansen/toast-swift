@@ -9,7 +9,15 @@ import Foundation
 import UIKit
 
 public class IconAppleToastView : UIStackView {
-    public init(image: UIImage, imageTint: UIColor? = .label, title: String, subtitle: String? = nil) {
+    public static var defaultImageTint: UIColor {
+        if #available(iOS 13.0, *) {
+            return .label
+        } else {
+            return .black
+        }
+    }
+    
+    public init(image: UIImage, imageTint: UIColor? = defaultImageTint, title: String, subtitle: String? = nil) {
         super.init(frame: CGRect.zero)
         axis = .horizontal
         spacing = 15

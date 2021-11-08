@@ -8,6 +8,14 @@
 import UIKit
 
 public class Toast {
+    public static var defaultImageTint: UIColor {
+        if #available(iOS 13.0, *) {
+            return .label
+        } else {
+            return .black
+        }
+    }
+    
     public let view: ToastView
 
     private let config: ToastConfiguration
@@ -41,7 +49,7 @@ public class Toast {
     /// - Returns: A new Toast view with the configured layout
     public static func `default`(
         image: UIImage,
-        imageTint: UIColor? = .label,
+        imageTint: UIColor? = defaultImageTint,
         title: String,
         subtitle: String? = nil,
         config: ToastConfiguration = ToastConfiguration()
