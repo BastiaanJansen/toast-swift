@@ -54,6 +54,12 @@ public class AppleToastView : UIView, ToastView {
         style()
     }
     
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        UIView.animate(withDuration: 0.5) {
+            self.style()
+        }
+    }
+    
     private func style() {
         layoutIfNeeded()
         clipsToBounds = true
