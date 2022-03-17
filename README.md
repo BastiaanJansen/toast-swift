@@ -63,12 +63,13 @@ toast.show(haptic: .success, after: 1)
 
 ### Configuration options    
 The `text`, `default` and `custom` methods support custom configuration options. The following options are available:
-|      Name        | Description                                                                                     |       Type      | Default |
-|:----------------:|-------------------------------------------------------------------------------------------------|:---------------:|:-------:|
-|    `autoHide`    | When set to true, the toast will automatically close itself after display time has elapsed.     |      `Bool`     |  `true` |
-|   `displayTime`  | The duration the toast will be displayed before it will close when autoHide set to true.        |  `TimeInterval` |   `4`   |
-|  `animationTime` | Duration of the show and close animation.                                                       |  `TimeInterval` |  `0.2`  |
-|    `attachTo`    | The view which the toast view will be attached to.                                              |     `UIView`    |  `nil`  |
+| Name            | Description                                                                                         | Type           | Default |
+|-----------------|-----------------------------------------------------------------------------------------------------|----------------|---------|
+| `autoHide`      | When set to true, the toast will automatically close itself after display time has elapsed.         | `Bool`         | `true`  |
+| `displayTime`   | The duration the toast will be displayed before it will close when autoHide set to true in seconds. | `TimeInterval` | `4`     |
+| `animationTime` | Duration of the show and close animation in seconds.                                                | `TimeInterval` | `0.2`   |
+| `attachTo`      | The view which the toast view will be attached to.                                                  | `UIView`       | `nil`   |
+
 
 
 ```swift
