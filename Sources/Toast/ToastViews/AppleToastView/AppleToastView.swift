@@ -51,7 +51,9 @@ public class AppleToastView : UIView, ToastView {
         ])
         
         addSubviewConstraints()
-        style()
+        DispatchQueue.main.async {
+            self.style()
+        }
     }
     
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
