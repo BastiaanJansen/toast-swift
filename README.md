@@ -14,7 +14,7 @@ A Swift Toast view - iOS 14 style - built with UIKit. 🍞
 You can use The Swift Package Manager to install Toast-Swift by adding the description to your Package.swift file:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/BastiaanJansen/toast-swift", from: "1.0.6")
+    .package(url: "https://github.com/BastiaanJansen/toast-swift", from: "1.1.0")
 ]
 ```
 
@@ -43,12 +43,6 @@ let toast = Toast.default(
     title: "Airpods Pro",
     subtitle: "Connected"
 )
-toast.show()
-```
-
-If you want to tap to close the Toast, calling `enableTapToClose()`:
-```swift
-toast.enableTapToClose()
 toast.show()
 ```
 
