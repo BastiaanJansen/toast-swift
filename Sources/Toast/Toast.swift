@@ -8,6 +8,12 @@
 import UIKit
 
 public class Toast {
+    private var closeTimer: Timer? // The timer for closing animation
+    
+    /// This is for pan gesture to close.
+    private var startY: CGFloat = 0 // The origin.y of Toast
+    private var startShiftY: CGFloat = 0 // The origin.y of pan at began
+    
     public static var defaultImageTint: UIColor {
         if #available(iOS 13.0, *) {
             return .label
@@ -17,13 +23,13 @@ public class Toast {
     }
     
     public let view: ToastView
-
+    
     private let config: ToastConfiguration
     
     private var initialTransform: CGAffineTransform {
         return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
     }
-        
+    
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
     /// - Parameters:
     ///   - title: Title which is displayed in the toast view
@@ -82,6 +88,9 @@ public class Toast {
         self.view = view
         
         view.transform = initialTransform
+        if config.enablePanToClose{
+            enablePanToClose()
+        }
     }
     
     /// Show the toast with haptic feedback
@@ -102,18 +111,22 @@ public class Toast {
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.view.transform = .identity
         } completion: { [self] _ in
-            if config.autoHide {
-                close(after: config.displayTime)
+            closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false){[self] _ in
+                if config.autoHide {
+                    close()
+                }
             }
         }
     }
     
     /// Close the toast
     /// - Parameters:
-    ///   - time: Time after which the toast will be closed
     ///   - completion: A completion handler which is invoked after the toast is hidden
-    @objc public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
-        UIView.animate(withDuration: config.animationTime, delay: time, options: [.curveEaseIn, .allowUserInteraction], animations: {
+    public func close(completion: (() -> Void)? = nil) {
+        UIView.animate(withDuration: config.animationTime,
+                       delay: 0,
+                       options: [.curveEaseIn, .allowUserInteraction],
+                       animations: {
             self.view.transform = self.initialTransform
         }, completion: { _ in
             self.view.removeFromSuperview()
@@ -123,7 +136,7 @@ public class Toast {
     
     private func topController() -> UIViewController? {
         let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-
+        
         if var topController = keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
@@ -136,5 +149,58 @@ public class Toast {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+public extension Toast{
+    private func enablePanToClose(){
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(toastOnPan))
+        self.view.addGestureRecognizer(pan)
+    }
     
+    @objc private func toastOnPan(_ gesture: UIPanGestureRecognizer){
+        guard let topVc = topController() else {
+            return
+        }
+        
+        switch gesture.state{
+        case .began:
+            startY = self.view.frame.origin.y
+            startShiftY = gesture.location(in: topVc.view).y
+            closeTimer?.invalidate() // prevent timer to fire close action while being touched
+        case .changed:
+            let delta = gesture.location(in: topVc.view).y - startShiftY
+            if delta <= 0{
+                self.view.frame.origin.y = startY + delta
+            }
+        case .ended:
+            let threshold = initialTransform.ty + (startY - initialTransform.ty) * 2 / 3
+            
+            if self.view.frame.origin.y < threshold{
+                close()
+            }else{
+                // move back to origin position
+                UIView.animate(withDuration: config.animationTime, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
+                    self.view.frame.origin.y = self.startY
+                } completion: { [self] _ in
+                    closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false){[self] _ in
+                        if config.autoHide {
+                            close()
+                        }
+                    }
+                }
+            }
+        default:
+            break
+        }
+    }
+    
+    func enableTapToClose(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(toastOnTap))
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    @objc func toastOnTap(_ gesture: UITapGestureRecognizer){
+        closeTimer?.invalidate()
+        close()
+    }
 }

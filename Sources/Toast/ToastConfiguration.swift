@@ -10,6 +10,7 @@ import UIKit
 
 public struct ToastConfiguration {
     public let autoHide: Bool
+    public let enablePanToClose: Bool
     public let displayTime: TimeInterval
     public let animationTime: TimeInterval
     
@@ -19,16 +20,19 @@ public struct ToastConfiguration {
     /// Creates a new Toast configuration object.
     /// - Parameters:
     ///   - autoHide: When set to true, the toast will automatically close itself after display time has elapsed.
+    ///   - enablePanToClose: When set to true, the toast will be able to close by swiping up.
     ///   - displayTime: The duration the toast will be displayed before it will close when autoHide set to true.
     ///   - animationTime:Duration of the animation
     ///   - attachTo: The view on which the toast view will be attached.
     public init(
         autoHide: Bool = true,
+        enablePanToClose: Bool = true,
         displayTime: TimeInterval = 4,
         animationTime: TimeInterval = 0.2,
         attachTo view: UIView? = nil
     ) {
         self.autoHide = autoHide
+        self.enablePanToClose = enablePanToClose
         self.displayTime = displayTime
         self.animationTime = animationTime
         self.view = view
