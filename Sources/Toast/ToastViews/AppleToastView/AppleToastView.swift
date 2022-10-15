@@ -17,7 +17,7 @@ public class AppleToastView : UIView, ToastView {
     
     private let child: UIView
     
-    private var toast: Toast?
+    private weak var toast: Toast?
     
     public init(
         child: UIView,
