@@ -13,3 +13,10 @@ public protocol ToastDelegate: AnyObject {
     func didCloseToast(_ toast: Toast)
 
 }
+
+extension ToastDelegate {
+
+    func didShowToast(_ toast: Toast) {}
+    func didCloseToast(_ toast: Toast) {}
+
+}
