@@ -23,6 +23,8 @@ public class Toast {
     }
     
     public let view: ToastView
+
+    public weak var delegate: ToastDelegate?
     
     private let config: ToastConfiguration
     
@@ -108,6 +110,8 @@ public class Toast {
         config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
         view.createView(for: self)
         
+        delegate?.didShowToast(self)
+
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.view.transform = .identity
         } completion: { [self] _ in
@@ -131,6 +135,7 @@ public class Toast {
         }, completion: { _ in
             self.view.removeFromSuperview()
             completion?()
+            self.delegate?.didCloseToast(self)
         })
     }
     
