@@ -23,6 +23,8 @@ public class Toast {
     }
     
     public let view: ToastView
+
+    public weak var delegate: ToastDelegate?
     
     private let config: ToastConfiguration
     
@@ -108,9 +110,12 @@ public class Toast {
         config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
         view.createView(for: self)
         
+        delegate?.willShowToast(self)
+
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.view.transform = .identity
         } completion: { [self] _ in
+            delegate?.didShowToast(self)
             closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
                 if config.autoHide {
                     close()
@@ -123,6 +128,8 @@ public class Toast {
     /// - Parameters:
     ///   - completion: A completion handler which is invoked after the toast is hidden
     public func close(completion: (() -> Void)? = nil) {
+        delegate?.willCloseToast(self)
+
         UIView.animate(withDuration: config.animationTime,
                        delay: 0,
                        options: [.curveEaseIn, .allowUserInteraction],
@@ -131,6 +138,7 @@ public class Toast {
         }, completion: { _ in
             self.view.removeFromSuperview()
             completion?()
+            self.delegate?.didCloseToast(self)
         })
     }
     
