@@ -107,6 +107,28 @@ let toast = Toast.custom(view: customToastView)
 toast.show()
 ```
 
+### Delegates
+Below delegate functions are optional to implement when implementing `ToastDelegate`.
+
+```swift
+extension MyViewController: ToastDelegate {
+    func willShowToast(_ toast: Toast) {
+        print("Toast will be shown after this")
+    }
+
+    func didShowToast(_ toast: Toast) {
+        print("Toast was shown")
+    }
+
+    func willCloseToast(_ toast: Toast) {
+        print("Toast will be closed after this")
+    }
+
+    func didCloseToast(_ toast: Toast) {
+        print("Toast was closed (either automatically, dismissed by user or programmatically)")
+    }
+}
+```
 ## Licence
 Toast-Swift is available under the MIT licence. See the LICENCE for more info.
 
