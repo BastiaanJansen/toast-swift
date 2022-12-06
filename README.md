@@ -39,7 +39,7 @@ toast.show()
 If you want to add an icon, use the `default` method to construct a toast:
 ```swift
 let toast = Toast.default(
-    image: UIImage(systemname: "airpodspro")!,
+    image: UIImage(systemName: "airpodspro")!,
     title: "Airpods Pro",
     subtitle: "Connected"
 )
