@@ -66,6 +66,7 @@ The `text`, `default` and `custom` methods support custom configuration options.
 
 | Name            | Description                                                                                         | Type           | Default |
 |-----------------|-----------------------------------------------------------------------------------------------------|----------------|---------|
+| `direction`      | Where the toast will be shown.        | `.bottom` or `.up`        | `.up`  |
 | `autoHide`      | When set to true, the toast will automatically close itself after display time has elapsed.         | `Bool`         | `true`  |
 | `enablePanToClose`      | When set to true, the toast will be able to close by swiping up.         | `Bool`         | `true`  |
 | `displayTime`   | The duration the toast will be displayed before it will close when autoHide set to true in seconds. | `TimeInterval` | `4`     |
@@ -75,6 +76,7 @@ The `text`, `default` and `custom` methods support custom configuration options.
 
 ```swift
 let config = ToastConfiguration(
+    direction: .up,
     autoHide: true,
     enablePanToClose: true,
     displayTime: 5,
