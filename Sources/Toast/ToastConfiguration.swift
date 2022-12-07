@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 public struct ToastConfiguration {
+    public let direction: Toast.Direction
     public let autoHide: Bool
     public let enablePanToClose: Bool
     public let displayTime: TimeInterval
@@ -25,12 +26,14 @@ public struct ToastConfiguration {
     ///   - animationTime:Duration of the animation
     ///   - attachTo: The view on which the toast view will be attached.
     public init(
+        direction: Toast.Direction = .top,
         autoHide: Bool = true,
         enablePanToClose: Bool = true,
         displayTime: TimeInterval = 4,
         animationTime: TimeInterval = 0.2,
         attachTo view: UIView? = nil
     ) {
+        self.direction = direction
         self.autoHide = autoHide
         self.enablePanToClose = enablePanToClose
         self.displayTime = displayTime

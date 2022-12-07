@@ -8,6 +8,11 @@
 import UIKit
 
 public class Toast {
+    /// The direction where the toast will be displayed
+    public enum Direction {
+        case top, bottom
+    }
+    
     private var closeTimer: Timer?
     
     /// This is for pan gesture to close.
@@ -28,8 +33,15 @@ public class Toast {
     
     private let config: ToastConfiguration
     
+    private(set) var direction: Direction
+    
     private var initialTransform: CGAffineTransform {
-        return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
+        switch self.direction {
+        case .top:
+            return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
+        case .bottom:
+            return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: 100)
+        }
     }
     
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
@@ -88,6 +100,7 @@ public class Toast {
     public required init(view: ToastView, config: ToastConfiguration) {
         self.config = config
         self.view = view
+        self.direction = config.direction
         
         view.transform = initialTransform
         if config.enablePanToClose {
