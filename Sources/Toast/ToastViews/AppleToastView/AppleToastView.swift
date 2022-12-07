@@ -46,9 +46,16 @@ public class AppleToastView : UIView, ToastView {
             widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth),
             leadingAnchor.constraint(greaterThanOrEqualTo: superview.leadingAnchor, constant: 10),
             trailingAnchor.constraint(lessThanOrEqualTo: superview.trailingAnchor, constant: -10),
-            topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 0),
             centerXAnchor.constraint(equalTo: superview.centerXAnchor)
         ])
+        
+        switch toast.direction {
+        case .bottom:
+            bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
+            
+        case .top:
+            topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 0).isActive = true
+        }
         
         addSubviewConstraints()
         DispatchQueue.main.async {
@@ -65,6 +72,7 @@ public class AppleToastView : UIView, ToastView {
     private func style() {
         layoutIfNeeded()
         clipsToBounds = true
+        layer.zPosition = 999
         layer.cornerRadius = frame.height / 2
         if #available(iOS 12.0, *) {
             backgroundColor = traitCollection.userInterfaceStyle == .light ? lightBackgroundColor : darkBackgroundColor
