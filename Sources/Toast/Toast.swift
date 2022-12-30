@@ -46,6 +46,21 @@ public class Toast {
     
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
     /// - Parameters:
+    ///   - title: Attributed title which is displayed in the toast view
+    ///   - subtitle: Optional attributed subtitle which is displayed in the toast view
+    ///   - config: Configuration options
+    /// - Returns: A new Toast view with the configured layout
+    public static func text(
+        _ title: NSAttributedString,
+        subtitle: NSAttributedString? = nil,
+        config: ToastConfiguration = ToastConfiguration()
+    ) -> Toast {
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle))
+        return self.init(view: view, config: config)
+    }
+    
+    /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
+    /// - Parameters:
     ///   - title: Title which is displayed in the toast view
     ///   - subtitle: Optional subtitle which is displayed in the toast view
     ///   - config: Configuration options
@@ -56,6 +71,27 @@ public class Toast {
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
         let view = AppleToastView(child: TextToastView(title, subtitle: subtitle))
+        return self.init(view: view, config: config)
+    }
+    
+    /// Creates a new Toast with the default Apple style layout with an icon, title and optional subtitle.
+    /// - Parameters:
+    ///   - image: Image which is displayed in the toast view
+    ///   - imageTint: Tint of the image
+    ///   - title: Attributed title which is displayed in the toast view
+    ///   - subtitle: Optional attributed subtitle which is displayed in the toast view
+    ///   - config: Configuration options
+    /// - Returns: A new Toast view with the configured layout
+    public static func `default`(
+        image: UIImage,
+        imageTint: UIColor? = defaultImageTint,
+        title: NSAttributedString,
+        subtitle: NSAttributedString? = nil,
+        config: ToastConfiguration = ToastConfiguration()
+    ) -> Toast {
+        let view = AppleToastView(
+            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle)
+        )
         return self.init(view: view, config: config)
     }
     

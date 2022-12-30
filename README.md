@@ -36,6 +36,17 @@ let toast = Toast.text("Safari pasted from Notes", subtitle: "A few seconds ago"
 toast.show()
 ```
 
+And if you want to use your own font(NSAttributedString is supported):
+```swift
+let attributes = [
+    NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Bold", size: 17)!, 
+    NSAttributedStringKey.foregroundColor: UIColor.black
+]
+let attributedString  = NSMutableAttributedString(string: "Safari pasted from Notes" , attributes: attributes)
+let toast = Toast.text(attributedString)
+toast.show()
+```
+
 If you want to add an icon, use the `default` method to construct a toast:
 ```swift
 let toast = Toast.default(
