@@ -284,3 +284,42 @@ public extension Toast{
         close()
     }
 }
+
+fileprivate extension Toast.AnimationType {
+    /// Applies the effects to the ToastView.
+    func apply(to view: UIView) {
+        switch self {
+        case .slide(x: let x, y: let y):
+            view.transform = CGAffineTransform(translationX: x, y: y)
+            
+        case .fade(let value):
+            view.alpha = value
+            
+        case .scaleAndSlide(let scaleX, let scaleY, let x, let y):
+            view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY).translatedBy(x: x, y: y)
+            
+        case .scale(let scaleX, let scaleY):
+            view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+            
+        case .custom(let transformation):
+            view.transform = transformation
+            
+        case .`default`:
+            break
+        }
+    }
+    
+    /// Undo the effects from the ToastView so that it never happened.
+    func undo(from view: UIView) {
+        switch self {
+        case .slide, .scaleAndSlide, .scale, .custom:
+            view.transform = .identity
+            
+        case .fade:
+            view.alpha = 1.0
+            
+        case .`default`:
+            break
+        }
+    }
+}
