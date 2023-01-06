@@ -160,8 +160,7 @@ public class Toast {
         self.config = config
         self.view = view
         self.direction = config.direction
-        
-        view.transform = initialTransform
+                
         if config.enablePanToClose {
             enablePanToClose()
         }
@@ -184,8 +183,9 @@ public class Toast {
         
         delegate?.willShowToast(self)
 
+        config.enteringAnimation.apply(to: self.view)
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
-            self.view.transform = .identity
+            self.config.enteringAnimation.undo(from: self.view)
         } completion: { [self] _ in
             delegate?.didShowToast(self)
             closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
@@ -206,7 +206,7 @@ public class Toast {
                        delay: 0,
                        options: [.curveEaseIn, .allowUserInteraction],
                        animations: {
-            self.view.transform = self.initialTransform
+            self.config.exitingAnimation.apply(to: self.view)
         }, completion: { _ in
             self.view.removeFromSuperview()
             completion?()
