@@ -58,15 +58,6 @@ public class Toast {
     
     private(set) var direction: Direction
     
-    private var initialTransform: CGAffineTransform {
-        switch self.direction {
-        case .top:
-            return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
-        case .bottom:
-            return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: 100)
-        }
-    }
-    
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
     /// - Parameters:
     ///   - title: Attributed title which is displayed in the toast view
@@ -233,7 +224,7 @@ public class Toast {
 
 public extension Toast{
     private func enablePanToClose() {
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(toastOnPan))
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(toastOnPan(_:)))
         self.view.addGestureRecognizer(pan)
     }
     
@@ -249,16 +240,24 @@ public extension Toast{
             closeTimer?.invalidate() // prevent timer to fire close action while being touched
         case .changed:
             let delta = gesture.location(in: topVc.view).y - startShiftY
-            if delta <= 0{
-                self.view.frame.origin.y = startY + delta
+            switch direction {
+            case .top:
+                if delta <= 0 {
+                    self.view.frame.origin.y = startY + delta
+                }
+            case .bottom:
+                if delta >= 0 {
+                    self.view.frame.origin.y = startY + delta
+                }
             }
         case .ended:
-            let threshold = initialTransform.ty + (startY - initialTransform.ty) * 2 / 3
+            let threshold = 15.0 // if user drags more than threshold the toast will be dismissed
+            let ammountOfUserDragged = abs(startY - self.view.frame.origin.y)
+            let shouldDismissToast = ammountOfUserDragged > threshold
             
-            if self.view.frame.origin.y < threshold {
+            if shouldDismissToast {
                 close()
-            }else{
-                // move back to origin position
+            } else {
                 UIView.animate(withDuration: config.animationTime, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
                     self.view.frame.origin.y = self.startY
                 } completion: { [self] _ in
@@ -267,6 +266,13 @@ public extension Toast{
                             close()
                         }
                     }
+                }
+            }
+            
+        case .cancelled, .failed:
+            closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
+                if config.autoHide {
+                    close()
                 }
             }
         default:
