@@ -82,6 +82,8 @@ The `text`, `default` and `custom` methods support custom configuration options.
 | `enablePanToClose`      | When set to true, the toast will be able to close by swiping up.         | `Bool`         | `true`  |
 | `displayTime`   | The duration the toast will be displayed before it will close when autoHide set to true in seconds. | `TimeInterval` | `4`     |
 | `animationTime` | Duration of the show and close animation in seconds.                                                | `TimeInterval` | `0.2`   |
+| `enteringAnimation` | The type of animation that will be used when toast is showing                                   | `.slide`, `.fade`, `.scaleAndSlide`, `.scale` and `.custom` | `.default`|
+| `exitingAnimation` | The type of animation that will be used when toast is exiting                                    | `.slide`, `.fade`, `.scaleAndSlide`, `.scale` and `.custom` | `.default`|
 | `attachTo`      | The view which the toast view will be attached to.                                                  | `UIView`       | `nil`   |
 
 
@@ -96,6 +98,31 @@ let config = ToastConfiguration(
 
 let toast = toast.text("Safari pasted from Notes", config: config)
 ```
+
+### Custom entering/exiting animations
+```swift
+self.toast = Toast.text(
+            "Safari pasted from Noted",
+            config: .init(
+                direction: .bottom,
+                enteringAnimation: .fade(alphaValue: 0.5),
+                exitingAnimation: .slide(x: 0, y: 100))
+            ).show()
+```
+The above configuration will show a toast that will appear on screen with an animation of fade-in. And then when exiting will go down and disapear.
+
+```swift
+self.toast = Toast.text(
+            "Safari pasted from Noted",
+            config: .init(
+                direction: .bottom,
+                enteringAnimation: .scale(scaleX: 0.6, scaleY: 0.6),
+                exitingAnimation: .default
+            ).show()
+```
+The above configuration will show a toast that will appear on screen with scaling up animation from 0.6 to 1.0. And then when exiting will use our default animation (which is scaleAndSlide)
+
+For more on animation see the `Toast.AnimationType` enum.
 
 ### Custom toast view
 Don't like the default Apple'ish style? No problem, it is also possible to use a custom toast view with the `custom` method. Firstly, create a class that confirms to the `ToastView` protocol:
