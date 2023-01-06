@@ -13,6 +13,29 @@ public class Toast {
         case top, bottom
     }
     
+    /// Built-in animations for your toast
+    public enum AnimationType {
+        /// Use this type for fading in/out animations.
+        case slide(x: CGFloat, y: CGFloat)
+
+        /// Use this type for fading in/out animations.
+        ///
+        /// alphaValue must be greater or equal to 0 and less or equal to 1.
+        case fade(alphaValue: CGFloat)
+        
+        /// Use this type for scaling and slide in/out animations.
+        case scaleAndSlide(scaleX: CGFloat, scaleY: CGFloat, x: CGFloat, y: CGFloat)
+        
+        /// Use this type for scaling in/out animations.
+        case scale(scaleX: CGFloat, scaleY: CGFloat)
+        
+        /// Use this type for giving your own affine transformation
+        case custom(transformation: CGAffineTransform)
+        
+        /// Currently the default animation if no explicit one specified.
+        case `default`
+    }
+        
     private var closeTimer: Timer?
     
     /// This is for pan gesture to close.
