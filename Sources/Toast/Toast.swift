@@ -13,6 +13,29 @@ public class Toast {
         case top, bottom
     }
     
+    /// Built-in animations for your toast
+    public enum AnimationType {
+        /// Use this type for fading in/out animations.
+        case slide(x: CGFloat, y: CGFloat)
+
+        /// Use this type for fading in/out animations.
+        ///
+        /// alphaValue must be greater or equal to 0 and less or equal to 1.
+        case fade(alphaValue: CGFloat)
+        
+        /// Use this type for scaling and slide in/out animations.
+        case scaleAndSlide(scaleX: CGFloat, scaleY: CGFloat, x: CGFloat, y: CGFloat)
+        
+        /// Use this type for scaling in/out animations.
+        case scale(scaleX: CGFloat, scaleY: CGFloat)
+        
+        /// Use this type for giving your own affine transformation
+        case custom(transformation: CGAffineTransform)
+        
+        /// Currently the default animation if no explicit one specified.
+        case `default`
+    }
+        
     private var closeTimer: Timer?
     
     /// This is for pan gesture to close.
@@ -34,15 +57,6 @@ public class Toast {
     private let config: ToastConfiguration
     
     private(set) var direction: Direction
-    
-    private var initialTransform: CGAffineTransform {
-        switch self.direction {
-        case .top:
-            return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
-        case .bottom:
-            return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: 100)
-        }
-    }
     
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
     /// - Parameters:
@@ -137,8 +151,7 @@ public class Toast {
         self.config = config
         self.view = view
         self.direction = config.direction
-        
-        view.transform = initialTransform
+                
         if config.enablePanToClose {
             enablePanToClose()
         }
@@ -161,8 +174,9 @@ public class Toast {
         
         delegate?.willShowToast(self)
 
+        config.enteringAnimation.apply(to: self.view)
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
-            self.view.transform = .identity
+            self.config.enteringAnimation.undo(from: self.view)
         } completion: { [self] _ in
             delegate?.didShowToast(self)
             closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
@@ -183,7 +197,7 @@ public class Toast {
                        delay: 0,
                        options: [.curveEaseIn, .allowUserInteraction],
                        animations: {
-            self.view.transform = self.initialTransform
+            self.config.exitingAnimation.apply(to: self.view)
         }, completion: { _ in
             self.view.removeFromSuperview()
             completion?()
@@ -210,7 +224,7 @@ public class Toast {
 
 public extension Toast{
     private func enablePanToClose() {
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(toastOnPan))
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(toastOnPan(_:)))
         self.view.addGestureRecognizer(pan)
     }
     
@@ -226,16 +240,24 @@ public extension Toast{
             closeTimer?.invalidate() // prevent timer to fire close action while being touched
         case .changed:
             let delta = gesture.location(in: topVc.view).y - startShiftY
-            if delta <= 0{
-                self.view.frame.origin.y = startY + delta
+            switch direction {
+            case .top:
+                if delta <= 0 {
+                    self.view.frame.origin.y = startY + delta
+                }
+            case .bottom:
+                if delta >= 0 {
+                    self.view.frame.origin.y = startY + delta
+                }
             }
         case .ended:
-            let threshold = initialTransform.ty + (startY - initialTransform.ty) * 2 / 3
+            let threshold = 15.0 // if user drags more than threshold the toast will be dismissed
+            let ammountOfUserDragged = abs(startY - self.view.frame.origin.y)
+            let shouldDismissToast = ammountOfUserDragged > threshold
             
-            if self.view.frame.origin.y < threshold {
+            if shouldDismissToast {
                 close()
-            }else{
-                // move back to origin position
+            } else {
                 UIView.animate(withDuration: config.animationTime, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
                     self.view.frame.origin.y = self.startY
                 } completion: { [self] _ in
@@ -244,6 +266,13 @@ public extension Toast{
                             close()
                         }
                     }
+                }
+            }
+            
+        case .cancelled, .failed:
+            closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
+                if config.autoHide {
+                    close()
                 }
             }
         default:
@@ -259,5 +288,44 @@ public extension Toast{
     @objc func toastOnTap(_ gesture: UITapGestureRecognizer) {
         closeTimer?.invalidate()
         close()
+    }
+}
+
+fileprivate extension Toast.AnimationType {
+    /// Applies the effects to the ToastView.
+    func apply(to view: UIView) {
+        switch self {
+        case .slide(x: let x, y: let y):
+            view.transform = CGAffineTransform(translationX: x, y: y)
+            
+        case .fade(let value):
+            view.alpha = value
+            
+        case .scaleAndSlide(let scaleX, let scaleY, let x, let y):
+            view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY).translatedBy(x: x, y: y)
+            
+        case .scale(let scaleX, let scaleY):
+            view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+            
+        case .custom(let transformation):
+            view.transform = transformation
+            
+        case .`default`:
+            break
+        }
+    }
+    
+    /// Undo the effects from the ToastView so that it never happened.
+    func undo(from view: UIView) {
+        switch self {
+        case .slide, .scaleAndSlide, .scale, .custom:
+            view.transform = .identity
+            
+        case .fade:
+            view.alpha = 1.0
+            
+        case .`default`:
+            break
+        }
     }
 }
