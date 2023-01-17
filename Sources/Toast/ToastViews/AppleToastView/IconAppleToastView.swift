@@ -86,6 +86,9 @@ public class IconAppleToastView : UIStackView {
             self.vStack.addArrangedSubview(self.subtitleLabel)
         }
         
+        self.imageView.image = image
+        self.imageView.tintColor = imageTint
+        
         addArrangedSubview(self.imageView)
         addArrangedSubview(self.vStack)
     }
