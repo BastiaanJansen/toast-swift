@@ -89,7 +89,7 @@ The `text`, `default` and `custom` methods support custom configuration options.
 
 ```swift
 let config = ToastConfiguration(
-    direction: .up,
+    direction: .top,
     autoHide: true,
     enablePanToClose: true,
     displayTime: 5,
