@@ -157,6 +157,7 @@ public class Toast {
         }
     }
     
+#if !os(tvOS)
     /// Show the toast with haptic feedback
     /// - Parameters:
     ///   - type: Haptic feedback type
@@ -165,6 +166,7 @@ public class Toast {
         UINotificationFeedbackGenerator().notificationOccurred(type)
         show(after: time)
     }
+#endif
     
     /// Show the toast
     /// - Parameter delay: Time after which the toast is shown
