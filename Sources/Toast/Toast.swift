@@ -67,9 +67,11 @@ public class Toast {
     public static func text(
         _ title: NSAttributedString,
         subtitle: NSAttributedString? = nil,
+        titleNumberOfLines: Int = 0,
+        subtitleNumberOfLines: Int = 0,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle))
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, titleNumberOfLines: titleNumberOfLines, subtitleNumberOfLines: subtitleNumberOfLines))
         return self.init(view: view, config: config)
     }
     
@@ -82,9 +84,11 @@ public class Toast {
     public static func text(
         _ title: String,
         subtitle: String? = nil,
+        titleNumberOfLines: Int = 0,
+        subtitleNumberOfLines: Int = 0,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle))
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, titleNumberOfLines: titleNumberOfLines, subtitleNumberOfLines: subtitleNumberOfLines))
         return self.init(view: view, config: config)
     }
     
@@ -101,10 +105,12 @@ public class Toast {
         imageTint: UIColor? = defaultImageTint,
         title: NSAttributedString,
         subtitle: NSAttributedString? = nil,
+        titleNumberOfLines: Int = 0,
+        subtitleNumberOfLines: Int = 0,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
         let view = AppleToastView(
-            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle)
+            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle, titleNumberOfLines: titleNumberOfLines, subtitleNumberOfLines: subtitleNumberOfLines)
         )
         return self.init(view: view, config: config)
     }
@@ -122,10 +128,12 @@ public class Toast {
         imageTint: UIColor? = defaultImageTint,
         title: String,
         subtitle: String? = nil,
+        titleNumberOfLines: Int = 0,
+        subtitleNumberOfLines: Int = 0,
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
         let view = AppleToastView(
-            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle)
+            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle, titleNumberOfLines: titleNumberOfLines, subtitleNumberOfLines: subtitleNumberOfLines)
         )
         return self.init(view: view, config: config)
     }

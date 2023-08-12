@@ -51,16 +51,20 @@ public class IconAppleToastView : UIStackView {
         image: UIImage,
         imageTint: UIColor? = defaultImageTint,
         title: NSAttributedString,
-        subtitle: NSAttributedString? = nil
+        subtitle: NSAttributedString? = nil,
+        titleNumberOfLines: Int = 0,
+        subtitleNumberOfLines: Int = 0
     ) {
         super.init(frame: CGRect.zero)
         commonInit()
         
         self.titleLabel.attributedText = title
+        self.titleLabel.numberOfLines = titleNumberOfLines
         self.vStack.addArrangedSubview(self.titleLabel)
         
         if let subtitle = subtitle {
             self.subtitleLabel.attributedText = subtitle
+            self.subtitleLabel.numberOfLines = subtitleNumberOfLines
             self.vStack.addArrangedSubview(self.subtitleLabel)
         }
         
@@ -71,11 +75,19 @@ public class IconAppleToastView : UIStackView {
         addArrangedSubview(self.vStack)
     }
 
-    public init(image: UIImage, imageTint: UIColor? = defaultImageTint, title: String, subtitle: String? = nil) {
+    public init(
+        image: UIImage,
+        imageTint: UIColor? = defaultImageTint,
+        title: String,
+        subtitle: String? = nil,
+        titleNumberOfLines: Int = 0,
+        subtitleNumberOfLines: Int = 0
+    ) {
         super.init(frame: CGRect.zero)
         commonInit()
         
         self.titleLabel.text = title
+        self.titleLabel.numberOfLines = titleNumberOfLines
         self.titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
         self.vStack.addArrangedSubview(self.titleLabel)
         
@@ -83,6 +95,7 @@ public class IconAppleToastView : UIStackView {
             self.subtitleLabel.textColor = .systemGray
             self.subtitleLabel.text = subtitle
             self.subtitleLabel.font = .systemFont(ofSize: 12, weight: .bold)
+            self.subtitleLabel.numberOfLines = subtitleNumberOfLines
             self.vStack.addArrangedSubview(self.subtitleLabel)
         }
         
