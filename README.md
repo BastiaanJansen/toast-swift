@@ -147,6 +147,19 @@ let toast = Toast.custom(view: customToastView)
 toast.show()
 ```
 
+### Queues
+To show toasts after each other, use the `ToastQueue` class:
+
+```swift
+let toast1 = Toast.text("Notification 1")
+let toast2 = Toast.text("Notification 2")
+let toast3 = Toast.text("Notification 3")
+
+let queue = ToastQueue(toasts: [toast1, toast2, toast3])
+
+queue.show()
+```
+
 ### Delegates
 Below delegate functions are optional to implement when implementing `ToastDelegate`.
 
