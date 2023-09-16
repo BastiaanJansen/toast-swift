@@ -25,7 +25,7 @@ public class Toast {
         }
     }
 
-    private var delegates: [ToastDelegate] = []
+    private var multicast = MulticastDelegate<ToastDelegate>()
     
     private let config: ToastConfiguration
     
@@ -153,13 +153,13 @@ public class Toast {
         config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
         view.createView(for: self)
         
-        delegates.forEach({ $0.willShowToast(self) })
+        multicast.invoke({ $0.willShowToast(self) })
 
         config.enteringAnimation.apply(to: self.view)
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.config.enteringAnimation.undo(from: self.view)
         } completion: { [self] _ in
-            delegates.forEach({ $0.didShowToast(self) })
+            multicast.invoke({ $0.didShowToast(self) })
             closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
                 if config.autoHide {
                     close()
@@ -172,7 +172,7 @@ public class Toast {
     /// - Parameters:
     ///   - completion: A completion handler which is invoked after the toast is hidden
     public func close(completion: (() -> Void)? = nil) {
-        delegates.forEach({ $0.willCloseToast(self) })
+        multicast.invoke({ $0.willCloseToast(self) })
 
         UIView.animate(withDuration: config.animationTime,
                        delay: 0,
@@ -182,12 +182,12 @@ public class Toast {
         }, completion: { _ in
             self.view.removeFromSuperview()
             completion?()
-            self.delegates.forEach({ $0.didCloseToast(self) })
+            self.multicast.invoke { $0.didCloseToast(self) }
         })
     }
     
     public func addDelegate(delegate: ToastDelegate) -> Void {
-        delegates.append(delegate)
+        multicast.add(delegate)
     }
     
     private func topController() -> UIViewController? {
@@ -240,7 +240,6 @@ public extension Toast {
         case .began:
             startY = self.view.frame.origin.y
             startShiftY = gesture.location(in: topVc.view).y
-            closeTimer?.invalidate() // prevent timer to fire close action while being touched
         case .changed:
             let delta = gesture.location(in: topVc.view).y - startShiftY
             switch direction {
@@ -257,6 +256,7 @@ public extension Toast {
             let threshold = 15.0 // if user drags more than threshold the toast will be dismissed
             let ammountOfUserDragged = abs(startY - self.view.frame.origin.y)
             let shouldDismissToast = ammountOfUserDragged > threshold
+            closeTimer?.invalidate()
             
             if shouldDismissToast {
                 close()
