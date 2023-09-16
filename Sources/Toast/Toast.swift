@@ -240,6 +240,7 @@ public extension Toast {
         case .began:
             startY = self.view.frame.origin.y
             startShiftY = gesture.location(in: topVc.view).y
+            closeTimer?.invalidate()
         case .changed:
             let delta = gesture.location(in: topVc.view).y - startShiftY
             switch direction {
@@ -256,7 +257,6 @@ public extension Toast {
             let threshold = 15.0 // if user drags more than threshold the toast will be dismissed
             let ammountOfUserDragged = abs(startY - self.view.frame.origin.y)
             let shouldDismissToast = ammountOfUserDragged > threshold
-            closeTimer?.invalidate()
             
             if shouldDismissToast {
                 close()
