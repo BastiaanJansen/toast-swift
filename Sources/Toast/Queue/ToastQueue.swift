@@ -17,12 +17,24 @@ public class ToastQueue {
         delegates.forEach(multicast.add)
     }
     
-    public func enqueue(toast: Toast) -> Void {
+    public func enqueue(_ toast: Toast) -> Void {
         queue.append(toast)
     }
     
-    public func enqueue(toasts: [Toast]) -> Void {
+    public func enqueue(_ toasts: [Toast]) -> Void {
         toasts.forEach({ queue.append($0) })
+    }
+    
+    public func dequeue(_ toastToDequeue: Toast) -> Void {
+        let index: Int? = queue.firstIndex { $0 === toastToDequeue }
+        
+        if let index {
+            queue.remove(at: index)
+        }
+    }
+    
+    public func size() -> Int {
+        return queue.count
     }
     
     public func show() -> Void {
