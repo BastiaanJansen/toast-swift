@@ -13,7 +13,7 @@ public class AppleToastView : UIView, ToastView {
     
     private let child: UIView
     
-    private weak var toast: Toast?
+    private var toast: Toast?
     
     public init(
         child: UIView,
@@ -24,6 +24,11 @@ public class AppleToastView : UIView, ToastView {
         super.init(frame: .zero)
         
         addSubview(child)
+    }
+    
+    public override func removeFromSuperview() {
+      super.removeFromSuperview()
+      self.toast = nil
     }
     
     public func createView(for toast: Toast) {
