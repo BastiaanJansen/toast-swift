@@ -17,8 +17,7 @@ extension Toast {
     public enum DismissSwipeDirection: Equatable {
         case toTop,
              toBottom,
-             natural,
-             none
+             natural
         
         func shouldApply(_ delta: CGFloat, direction: Direction) -> Bool {
             switch self {
@@ -33,11 +32,7 @@ extension Toast {
                 case .bottom:
                     return delta >= 0
                 }
-            default:
-                break
             }
-            
-            return false
         }
     }
     
