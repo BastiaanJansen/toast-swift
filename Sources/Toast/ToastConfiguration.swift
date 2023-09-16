@@ -20,7 +20,7 @@ public struct ToastConfiguration {
     /// Creates a new Toast configuration object.
     /// - Parameters:
     ///   - direction: The position the toast will be displayed.
-    ///   - dismissable: Choose when the toast dismisses.
+    ///   - dismissBy: Choose when the toast dismisses.
     ///   - animationTime:Duration of the animation
     ///   - enteringAnimation: The entering animation of the toast.
     ///   - exitingAnimation: The exiting animation of the toast.
