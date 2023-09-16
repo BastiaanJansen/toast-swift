@@ -153,13 +153,13 @@ public class Toast {
         config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
         view.createView(for: self)
         
-        multicast.invoke({ $0.willShowToast(self) })
+        multicast.invoke { $0.willShowToast(self) }
 
         config.enteringAnimation.apply(to: self.view)
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.config.enteringAnimation.undo(from: self.view)
         } completion: { [self] _ in
-            multicast.invoke({ $0.didShowToast(self) })
+            multicast.invoke { $0.didShowToast(self) }
             closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
                 if config.autoHide {
                     close()
@@ -172,7 +172,7 @@ public class Toast {
     /// - Parameters:
     ///   - completion: A completion handler which is invoked after the toast is hidden
     public func close(completion: (() -> Void)? = nil) {
-        multicast.invoke({ $0.willCloseToast(self) })
+        multicast.invoke { $0.willCloseToast(self) }
 
         UIView.animate(withDuration: config.animationTime,
                        delay: 0,
