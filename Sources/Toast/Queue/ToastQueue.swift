@@ -38,21 +38,21 @@ public class ToastQueue {
     }
     
     public func show() -> Void {
-        if (queue.isEmpty) {
-            return
-        }
-        
         show(index: 0)
     }
     
-    private func show(index: Int) -> Void {
+    private func show(index: Int, after: Double = 0.0) -> Void {
+        if queue.isEmpty {
+            return
+        }
+        
         let toast: Toast = queue.remove(at: index)
         let delegate = QueuedToastDelegate(queue: self)
         
-        multicast.invoke { $0.willShowAnyToast(toast) }
+        multicast.invoke { $0.willShowAnyToast(toast, queuedToasts: queue) }
         
         toast.addDelegate(delegate: delegate)
-        toast.show()
+        toast.show(after: after)
     }
     
     
@@ -65,8 +65,8 @@ public class ToastQueue {
         }
         
         public func didCloseToast(_ toast: Toast) {
-            queue.multicast.invoke { $0.didShowAnyToast(toast) }
-            queue.show()
+            queue.multicast.invoke { $0.didShowAnyToast(toast, queuedToasts: queue.queue) }
+            queue.show(index: 0, after: 0.5)
         }
         
     }

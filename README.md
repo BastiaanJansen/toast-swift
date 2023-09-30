@@ -14,7 +14,7 @@ A Swift Toast view - iOS 14 style - built with UIKit. 🍞
 You can use The Swift Package Manager to install Toast-Swift by adding the description to your Package.swift file:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/BastiaanJansen/toast-swift", from: "1.5.0")
+    .package(url: "https://github.com/BastiaanJansen/toast-swift", from: "1.6.0")
 ]
 ```
 
@@ -78,9 +78,7 @@ The `text`, `default` and `custom` methods support custom configuration options.
 | Name            | Description                                                                                         | Type           | Default |
 |-----------------|-----------------------------------------------------------------------------------------------------|----------------|---------|
 | `direction`      | Where the toast will be shown.        | `.bottom` or `.up`        | `.up`  |
-| `autoHide`      | When set to true, the toast will automatically close itself after display time has elapsed.         | `Bool`         | `true`  |
-| `enablePanToClose`      | When set to true, the toast will be able to close by swiping up.         | `Bool`         | `true`  |
-| `displayTime`   | The duration the toast will be displayed before it will close when autoHide set to true in seconds. | `TimeInterval` | `4`     |
+| `dismissBy`      | Choose when the toast dismisses.         | `Dismissable`         | [`.time`, `.swipe`]  |
 | `animationTime` | Duration of the show and close animation in seconds.                                                | `TimeInterval` | `0.2`   |
 | `enteringAnimation` | The type of animation that will be used when toast is showing                                   | `.slide`, `.fade`, `.scaleAndSlide`, `.scale` and `.custom` | `.default`|
 | `exitingAnimation` | The type of animation that will be used when toast is exiting                                    | `.slide`, `.fade`, `.scaleAndSlide`, `.scale` and `.custom` | `.default`|
@@ -90,9 +88,7 @@ The `text`, `default` and `custom` methods support custom configuration options.
 ```swift
 let config = ToastConfiguration(
     direction: .top,
-    autoHide: true,
-    enablePanToClose: true,
-    displayTime: 5,
+    dismissBy: [.time(time: 4.0), .swipe(direction: .natural), .longPress],
     animationTime: 0.2
 )
 

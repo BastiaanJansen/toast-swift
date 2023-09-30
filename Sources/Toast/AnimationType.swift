@@ -17,7 +17,7 @@ extension Toast {
         /// Use this type for fading in/out animations.
         ///
         /// alphaValue must be greater or equal to 0 and less or equal to 1.
-        case fade(alphaValue: CGFloat)
+        case fade(alpha: CGFloat)
         
         /// Use this type for scaling and slide in/out animations.
         case scaleAndSlide(scaleX: CGFloat, scaleY: CGFloat, x: CGFloat, y: CGFloat)

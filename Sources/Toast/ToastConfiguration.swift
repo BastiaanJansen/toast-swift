@@ -10,9 +10,7 @@ import UIKit
 
 public struct ToastConfiguration {
     public let direction: Toast.Direction
-    public let autoHide: Bool
-    public let enablePanToClose: Bool
-    public let displayTime: TimeInterval
+    public let dismissables: [Toast.Dismissable]
     public let animationTime: TimeInterval
     public let enteringAnimation: Toast.AnimationType
     public let exitingAnimation: Toast.AnimationType
@@ -22,27 +20,21 @@ public struct ToastConfiguration {
     /// Creates a new Toast configuration object.
     /// - Parameters:
     ///   - direction: The position the toast will be displayed.
-    ///   - autoHide: When set to true, the toast will automatically close itself after display time has elapsed.
-    ///   - enablePanToClose: When set to true, the toast will be able to close by swiping up.
-    ///   - displayTime: The duration the toast will be displayed before it will close when autoHide set to true.
+    ///   - dismissBy: Choose when the toast dismisses.
     ///   - animationTime:Duration of the animation
     ///   - enteringAnimation: The entering animation of the toast.
     ///   - exitingAnimation: The exiting animation of the toast.
     ///   - attachTo: The view on which the toast view will be attached.
     public init(
         direction: Toast.Direction = .top,
-        autoHide: Bool = true,
-        enablePanToClose: Bool = true,
-        displayTime: TimeInterval = 4,
+        dismissBy: [Toast.Dismissable] = [.time(time: 4.0), .swipe(direction: .natural)],
         animationTime: TimeInterval = 0.2,
         enteringAnimation: Toast.AnimationType = .default,
         exitingAnimation: Toast.AnimationType = .default,
         attachTo view: UIView? = nil
     ) {
         self.direction = direction
-        self.autoHide = autoHide
-        self.enablePanToClose = enablePanToClose
-        self.displayTime = displayTime
+        self.dismissables = dismissBy
         self.animationTime = animationTime
         self.enteringAnimation = enteringAnimation.isDefault ? Self.defaultEnteringAnimation(with: direction) : enteringAnimation
         self.exitingAnimation = exitingAnimation.isDefault ? Self.defaultExitingAnimation(with: direction) : exitingAnimation

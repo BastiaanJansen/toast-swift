@@ -27,9 +27,7 @@ public class Toast {
 
     private var multicast = MulticastDelegate<ToastDelegate>()
     
-    private let config: ToastConfiguration
-    
-    private(set) var direction: Direction
+    private(set) var config: ToastConfiguration
     
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
     /// - Parameters:
@@ -129,10 +127,18 @@ public class Toast {
     public required init(view: ToastView, config: ToastConfiguration) {
         self.config = config
         self.view = view
-        self.direction = config.direction
-                
-        if config.enablePanToClose {
-            enablePanToClose()
+        
+        for dismissable in config.dismissables {
+            switch dismissable {
+            case .tap:
+                enableTapToClose()
+            case .longPress:
+                enableLongPressToClose()
+            case .swipe:
+                enablePanToClose()
+            default:
+                break
+            }
         }
     }
     
@@ -150,7 +156,7 @@ public class Toast {
     /// Show the toast
     /// - Parameter delay: Time after which the toast is shown
     public func show(after delay: TimeInterval = 0) {
-        config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
+        config.view?.addSubview(view) ?? ToastHelper.topController()?.view.addSubview(view)
         view.createView(for: self)
         
         multicast.invoke { $0.willShowToast(self) }
@@ -160,11 +166,8 @@ public class Toast {
             self.config.enteringAnimation.undo(from: self.view)
         } completion: { [self] _ in
             multicast.invoke { $0.didShowToast(self) }
-            closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
-                if config.autoHide {
-                    close()
-                }
-            }
+            
+            configureCloseTimer()
         }
     }
     
@@ -190,36 +193,6 @@ public class Toast {
         multicast.add(delegate)
     }
     
-    private func topController() -> UIViewController? {
-        if var topController = keyWindow()?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            return topController
-        }
-        return nil
-    }
-
-    private func keyWindow() -> UIWindow? {
-        if #available(iOS 13.0, *) {
-            for scene in UIApplication.shared.connectedScenes {
-                guard let windowScene = scene as? UIWindowScene else {
-                    continue
-                }
-                if windowScene.windows.isEmpty {
-                    continue
-                }
-                guard let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
-                    continue
-                }
-                return window
-            }
-            return nil
-        } else {
-            return UIApplication.shared.windows.first(where: { $0.isKeyWindow })
-        }
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -232,27 +205,28 @@ public extension Toast {
     }
     
     @objc private func toastOnPan(_ gesture: UIPanGestureRecognizer) {
-        guard let topVc = topController() else {
+        guard let topVc = ToastHelper.topController() else {
             return
         }
         
-        switch gesture.state{
+        switch gesture.state {
         case .began:
             startY = self.view.frame.origin.y
             startShiftY = gesture.location(in: topVc.view).y
             closeTimer?.invalidate()
         case .changed:
             let delta = gesture.location(in: topVc.view).y - startShiftY
-            switch direction {
-            case .top:
-                if delta <= 0 {
-                    self.view.frame.origin.y = startY + delta
-                }
-            case .bottom:
-                if delta >= 0 {
-                    self.view.frame.origin.y = startY + delta
+            
+            for dismissable in config.dismissables {
+                if case .swipe(let dismissSwipeDirection) = dismissable {
+                    let shouldApply = dismissSwipeDirection.shouldApply(delta, direction: config.direction)
+                    
+                    if shouldApply {
+                        self.view.frame.origin.y = startY + delta
+                    }
                 }
             }
+            
         case .ended:
             let threshold = 15.0 // if user drags more than threshold the toast will be dismissed
             let ammountOfUserDragged = abs(startY - self.view.frame.origin.y)
@@ -264,20 +238,12 @@ public extension Toast {
                 UIView.animate(withDuration: config.animationTime, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
                     self.view.frame.origin.y = self.startY
                 } completion: { [self] _ in
-                    closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
-                        if config.autoHide {
-                            close()
-                        }
-                    }
+                    configureCloseTimer()
                 }
             }
             
         case .cancelled, .failed:
-            closeTimer = Timer.scheduledTimer(withTimeInterval: .init(config.displayTime), repeats: false) { [self] _ in
-                if config.autoHide {
-                    close()
-                }
-            }
+            configureCloseTimer()
         default:
             break
         }
@@ -288,8 +254,32 @@ public extension Toast {
         self.view.addGestureRecognizer(tap)
     }
     
+    func enableLongPressToClose() {
+        let tap = UILongPressGestureRecognizer(target: self, action: #selector(toastOnTap))
+        self.view.addGestureRecognizer(tap)
+    }
+    
     @objc func toastOnTap(_ gesture: UITapGestureRecognizer) {
         closeTimer?.invalidate()
         close()
+    }
+    
+    private func configureCloseTimer() {
+        for dismissable in config.dismissables {
+            if case .time(let displayTime) = dismissable {
+                closeTimer = Timer.scheduledTimer(withTimeInterval: .init(displayTime), repeats: false) { [self] _ in
+                    close()
+                }
+            }
+        }
+    }
+}
+
+extension Toast {
+    public enum Dismissable: Equatable {
+        case tap,
+             longPress,
+             time(time: TimeInterval),
+             swipe(direction: DismissSwipeDirection)
     }
 }

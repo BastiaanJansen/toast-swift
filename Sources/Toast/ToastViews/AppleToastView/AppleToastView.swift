@@ -44,7 +44,7 @@ public class AppleToastView : UIView, ToastView {
             centerXAnchor.constraint(equalTo: superview.centerXAnchor)
         ])
         
-        switch toast.direction {
+        switch toast.config.direction {
         case .bottom:
             bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
             
