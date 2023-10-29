@@ -147,9 +147,9 @@ public class Toast {
     /// - Parameters:
     ///   - type: Haptic feedback type
     ///   - time: Time after which the toast is shown
-    public func show(haptic type: UINotificationFeedbackGenerator.FeedbackType, after time: TimeInterval = 0) {
+    public func isShowing(haptic type: UINotificationFeedbackGenerator.FeedbackType, after time: TimeInterval = 0) {
         UINotificationFeedbackGenerator().notificationOccurred(type)
-        show(after: time)
+        isShowing(after: time)
     }
 #endif
     
