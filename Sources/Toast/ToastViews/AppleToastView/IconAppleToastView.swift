@@ -30,8 +30,7 @@ public class IconAppleToastView : UIStackView {
     }()
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        return label
+        UILabel()
     }()
     
     private lazy var subtitleLabel: UILabel = {

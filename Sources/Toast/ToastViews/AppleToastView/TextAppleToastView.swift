@@ -10,8 +10,7 @@ import UIKit
 
 public class TextToastView : UIStackView {
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        return label
+        UILabel()
     }()
     
     private lazy var subtitleLabel: UILabel = {
