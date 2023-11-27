@@ -41,7 +41,7 @@ public class Toast {
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle), config: viewConfig)
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig)
         return self.init(view: view, config: config)
     }
     
@@ -57,7 +57,7 @@ public class Toast {
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle), config: viewConfig)
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig)
         return self.init(view: view, config: config)
     }
     
