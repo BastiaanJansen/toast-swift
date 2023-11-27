@@ -14,8 +14,6 @@ public struct ToastConfiguration {
     public let animationTime: TimeInterval
     public let enteringAnimation: Toast.AnimationType
     public let exitingAnimation: Toast.AnimationType
-    public let titleNumberOfLines: Int
-    public let subTitleNumberOfLines: Int
 
     public let view: UIView?
 
@@ -33,8 +31,6 @@ public struct ToastConfiguration {
         animationTime: TimeInterval = 0.2,
         enteringAnimation: Toast.AnimationType = .default,
         exitingAnimation: Toast.AnimationType = .default,
-        titleNumberOfLines: Int = 1,
-        subTitleNumberOfLines: Int = 1,
         attachTo view: UIView? = nil
     ) {
         self.direction = direction
@@ -42,8 +38,6 @@ public struct ToastConfiguration {
         self.animationTime = animationTime
         self.enteringAnimation = enteringAnimation.isDefault ? Self.defaultEnteringAnimation(with: direction) : enteringAnimation
         self.exitingAnimation = exitingAnimation.isDefault ? Self.defaultExitingAnimation(with: direction) : exitingAnimation
-        self.titleNumberOfLines = titleNumberOfLines
-        self.subTitleNumberOfLines = subTitleNumberOfLines
         self.view = view
     }
 }
