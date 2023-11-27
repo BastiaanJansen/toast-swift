@@ -14,9 +14,9 @@ public struct ToastConfiguration {
     public let animationTime: TimeInterval
     public let enteringAnimation: Toast.AnimationType
     public let exitingAnimation: Toast.AnimationType
-    
+
     public let view: UIView?
-    
+
     /// Creates a new Toast configuration object.
     /// - Parameters:
     ///   - direction: The position the toast will be displayed.
