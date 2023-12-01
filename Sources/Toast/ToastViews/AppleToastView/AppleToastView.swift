@@ -68,7 +68,7 @@ public class AppleToastView : UIView, ToastView {
         layoutIfNeeded()
         clipsToBounds = true
         layer.zPosition = 999
-        layer.cornerRadius = frame.height / 2
+        layer.cornerRadius = config.cornerRadius ?? frame.height / 2
         if #available(iOS 12.0, *) {
             backgroundColor = traitCollection.userInterfaceStyle == .light ? config.lightBackgroundColor : config.darkBackgroundColor
         } else {
