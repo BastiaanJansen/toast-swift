@@ -10,6 +10,7 @@ import UIKit
 public class Toast {
     
     public let view: ToastView
+    public var backgroundView: UIView?
         
     private var closeTimer: Timer?
     
@@ -142,6 +143,18 @@ public class Toast {
         }
     }
     
+    public func addBackgroundView(with color: UIColor? = nil) {
+        backgroundView = UIView(frame: config.view?.frame ?? ToastHelper.topController()?.view.frame ?? .zero)
+        let defaultBackgroundColor: UIColor
+        if #available(iOS 13.0, *) {
+            defaultBackgroundColor = .label
+        } else {
+            defaultBackgroundColor = .black
+        }
+        backgroundView?.backgroundColor = color ?? defaultBackgroundColor.withAlphaComponent(0.25)
+        backgroundView?.layer.zPosition = 998
+    }
+    
 #if !os(tvOS)
     /// Show the toast with haptic feedback
     /// - Parameters:
@@ -156,14 +169,20 @@ public class Toast {
     /// Show the toast
     /// - Parameter delay: Time after which the toast is shown
     public func show(after delay: TimeInterval = 0) {
+        if let backgroundView = backgroundView {
+            config.view?.addSubview(backgroundView) ?? ToastHelper.topController()?.view.addSubview(backgroundView)
+        }
         config.view?.addSubview(view) ?? ToastHelper.topController()?.view.addSubview(view)
         view.createView(for: self)
         
         multicast.invoke { $0.willShowToast(self) }
 
         config.enteringAnimation.apply(to: self.view)
+        let endBackgroundColor = backgroundView?.backgroundColor
+        backgroundView?.backgroundColor = .clear
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.config.enteringAnimation.undo(from: self.view)
+            self.backgroundView?.backgroundColor = endBackgroundColor
         } completion: { [self] _ in
             multicast.invoke { $0.didShowToast(self) }
             
@@ -182,7 +201,9 @@ public class Toast {
                        options: [.curveEaseIn, .allowUserInteraction],
                        animations: {
             self.config.exitingAnimation.apply(to: self.view)
+            self.backgroundView?.backgroundColor = .clear
         }, completion: { _ in
+            self.backgroundView?.removeFromSuperview()
             self.view.removeFromSuperview()
             completion?()
             self.multicast.invoke { $0.didCloseToast(self) }
