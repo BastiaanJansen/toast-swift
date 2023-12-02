@@ -47,9 +47,10 @@ public class AppleToastView : UIView, ToastView {
         switch toast.config.direction {
         case .bottom:
             bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
-            
         case .top:
             topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 0).isActive = true
+        case .center:
+            centerYAnchor.constraint(equalTo: superview.layoutMarginsGuide.centerYAnchor, constant: 0).isActive = true
         }
         
         addSubviewConstraints()
@@ -68,7 +69,7 @@ public class AppleToastView : UIView, ToastView {
         layoutIfNeeded()
         clipsToBounds = true
         layer.zPosition = 999
-        layer.cornerRadius = frame.height / 2
+        layer.cornerRadius = config.cornerRadius ?? frame.height / 2
         if #available(iOS 12.0, *) {
             backgroundColor = traitCollection.userInterfaceStyle == .light ? config.lightBackgroundColor : config.darkBackgroundColor
         } else {
