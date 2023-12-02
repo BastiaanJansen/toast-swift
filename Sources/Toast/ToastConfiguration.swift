@@ -54,6 +54,10 @@ private extension ToastConfiguration {
             return .custom(
                 transformation: CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: 100)
             )
+        case .center:
+            return .custom(
+                transformation: CGAffineTransform(scaleX: 0.5, y: 0.5)
+            )
         }
     }
     
