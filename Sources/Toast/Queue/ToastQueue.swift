@@ -11,6 +11,7 @@ public class ToastQueue {
     
     private var queue: [Toast]
     private var multicast = MulticastDelegate<ToastQueueDelegate>()
+    private var isShowing = false
     
     public init(toasts: [Toast] = [], delegates: [ToastQueueDelegate] = []) {
         self.queue = toasts
@@ -22,7 +23,12 @@ public class ToastQueue {
     }
     
     public func enqueue(_ toasts: [Toast]) -> Void {
+        let size = queue.count
         toasts.forEach({ queue.append($0) })
+        
+        if size == 0 && isShowing {
+            show()
+        }
     }
     
     public func dequeue(_ toastToDequeue: Toast) -> Void {
@@ -42,6 +48,7 @@ public class ToastQueue {
     }
     
     private func show(index: Int, after: Double = 0.0) -> Void {
+        isShowing = true
         if queue.isEmpty {
             return
         }

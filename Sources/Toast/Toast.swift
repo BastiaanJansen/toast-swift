@@ -10,7 +10,8 @@ import UIKit
 public class Toast {
     
     public let view: ToastView
-        
+    private var backgroundView: UIView?
+    
     private var closeTimer: Timer?
     
     /// This is for pan gesture to close.
@@ -156,14 +157,22 @@ public class Toast {
     /// Show the toast
     /// - Parameter delay: Time after which the toast is shown
     public func show(after delay: TimeInterval = 0) {
+        if let backgroundView = self.createBackgroundView() {
+            self.backgroundView = backgroundView
+            config.view?.addSubview(backgroundView) ?? ToastHelper.topController()?.view.addSubview(backgroundView)
+        }
+
         config.view?.addSubview(view) ?? ToastHelper.topController()?.view.addSubview(view)
         view.createView(for: self)
         
         multicast.invoke { $0.willShowToast(self) }
 
         config.enteringAnimation.apply(to: self.view)
+        let endBackgroundColor = backgroundView?.backgroundColor
+        backgroundView?.backgroundColor = .clear
         UIView.animate(withDuration: config.animationTime, delay: delay, options: [.curveEaseOut, .allowUserInteraction]) {
             self.config.enteringAnimation.undo(from: self.view)
+            self.backgroundView?.backgroundColor = endBackgroundColor
         } completion: { [self] _ in
             multicast.invoke { $0.didShowToast(self) }
             
@@ -182,7 +191,9 @@ public class Toast {
                        options: [.curveEaseIn, .allowUserInteraction],
                        animations: {
             self.config.exitingAnimation.apply(to: self.view)
+            self.backgroundView?.backgroundColor = .clear
         }, completion: { _ in
+            self.backgroundView?.removeFromSuperview()
             self.view.removeFromSuperview()
             completion?()
             self.multicast.invoke { $0.didCloseToast(self) }
@@ -191,6 +202,18 @@ public class Toast {
     
     public func addDelegate(delegate: ToastDelegate) -> Void {
         multicast.add(delegate)
+    }
+    
+    private func createBackgroundView() -> UIView? {
+        switch (config.background) {
+        case .none:
+            return nil
+        case .color(let color):
+            let backgroundView = UIView(frame: config.view?.frame ?? ToastHelper.topController()?.view.frame ?? .zero)
+            backgroundView.backgroundColor = color
+            backgroundView.layer.zPosition = 998
+            return backgroundView
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -281,5 +304,10 @@ extension Toast {
              longPress,
              time(time: TimeInterval),
              swipe(direction: DismissSwipeDirection)
+    }
+    
+    public enum Background: Equatable {
+        case none,
+             color(color: UIColor = defaultImageTint.withAlphaComponent(0.25))
     }
 }

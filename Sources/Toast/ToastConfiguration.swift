@@ -14,6 +14,7 @@ public struct ToastConfiguration {
     public let animationTime: TimeInterval
     public let enteringAnimation: Toast.AnimationType
     public let exitingAnimation: Toast.AnimationType
+    public let background: Toast.Background
 
     public let view: UIView?
 
@@ -31,7 +32,8 @@ public struct ToastConfiguration {
         animationTime: TimeInterval = 0.2,
         enteringAnimation: Toast.AnimationType = .default,
         exitingAnimation: Toast.AnimationType = .default,
-        attachTo view: UIView? = nil
+        attachTo view: UIView? = nil,
+        background: Toast.Background = .none
     ) {
         self.direction = direction
         self.dismissables = dismissBy
@@ -39,6 +41,7 @@ public struct ToastConfiguration {
         self.enteringAnimation = enteringAnimation.isDefault ? Self.defaultEnteringAnimation(with: direction) : enteringAnimation
         self.exitingAnimation = exitingAnimation.isDefault ? Self.defaultExitingAnimation(with: direction) : exitingAnimation
         self.view = view
+        self.background = background
     }
 }
 
