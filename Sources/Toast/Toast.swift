@@ -28,7 +28,7 @@ public class Toast {
 
     private var multicast = MulticastDelegate<ToastDelegate>()
     
-    private(set) var config: ToastConfiguration
+    public private(set) var config: ToastConfiguration
     
     /// Creates a new Toast with the default Apple style layout with a title and an optional subtitle.
     /// - Parameters:
