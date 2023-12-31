@@ -8,7 +8,7 @@
 import UIKit
 
 public class Toast {
-    private static var queue = [Toast]()
+    private static var activeToasts = [Toast]()
     
     public let view: ToastView
     private var backgroundView: UIView?
@@ -181,12 +181,12 @@ public class Toast {
             if !config.allowToastOverlap {
                 closeOverlappedToasts()
             }
-            Toast.queue.append(self)
+            Toast.activeToasts.append(self)
         }
     }
     
     private func closeOverlappedToasts() {
-        Toast.queue.forEach {
+        Toast.activeToasts.forEach {
             $0.closeTimer?.invalidate()
             $0.close(animated: false)
         }
@@ -210,8 +210,8 @@ public class Toast {
         }, completion: { _ in
             self.backgroundView?.removeFromSuperview()
             self.view.removeFromSuperview()
-            if let index = Toast.queue.firstIndex(where: { $0 == self }) {
-                Toast.queue.remove(at: index)
+            if let index = Toast.activeToasts.firstIndex(where: { $0 == self }) {
+                Toast.activeToasts.remove(at: index)
             }
             completion?()
             self.multicast.invoke { $0.didCloseToast(self) }
