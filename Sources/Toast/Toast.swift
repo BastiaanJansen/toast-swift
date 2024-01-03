@@ -8,6 +8,7 @@
 import UIKit
 
 public class Toast {
+    private static var activeToasts = [Toast]()
     
     public let view: ToastView
     private var backgroundView: UIView?
@@ -177,24 +178,41 @@ public class Toast {
             multicast.invoke { $0.didShowToast(self) }
             
             configureCloseTimer()
+            if !config.allowToastOverlap {
+                closeOverlappedToasts()
+            }
+            Toast.activeToasts.append(self)
+        }
+    }
+    
+    private func closeOverlappedToasts() {
+        Toast.activeToasts.forEach {
+            $0.closeTimer?.invalidate()
+            $0.close(animated: false)
         }
     }
     
     /// Close the toast
     /// - Parameters:
     ///   - completion: A completion handler which is invoked after the toast is hidden
-    public func close(completion: (() -> Void)? = nil) {
+    ///   - animated: A Boolean value that determines whether to apply animation.
+    public func close(animated: Bool = true, completion: (() -> Void)? = nil) {
         multicast.invoke { $0.willCloseToast(self) }
 
         UIView.animate(withDuration: config.animationTime,
                        delay: 0,
                        options: [.curveEaseIn, .allowUserInteraction],
                        animations: {
-            self.config.exitingAnimation.apply(to: self.view)
+            if animated {
+                self.config.exitingAnimation.apply(to: self.view)
+            }
             self.backgroundView?.backgroundColor = .clear
         }, completion: { _ in
             self.backgroundView?.removeFromSuperview()
             self.view.removeFromSuperview()
+            if let index = Toast.activeToasts.firstIndex(where: { $0 == self }) {
+                Toast.activeToasts.remove(at: index)
+            }
             completion?()
             self.multicast.invoke { $0.didCloseToast(self) }
         })
@@ -309,5 +327,11 @@ extension Toast {
     public enum Background: Equatable {
         case none,
              color(color: UIColor = defaultImageTint.withAlphaComponent(0.25))
+    }
+}
+
+extension Toast: Equatable {
+    public static func == (lhs: Toast, rhs: Toast) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
 }
