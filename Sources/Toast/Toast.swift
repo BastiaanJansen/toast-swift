@@ -144,7 +144,7 @@ public class Toast {
         }
     }
     
-#if !os(tvOS)
+#if !os(tvOS) && !os(visionOS)
     /// Show the toast with haptic feedback
     /// - Parameters:
     ///   - type: Haptic feedback type
