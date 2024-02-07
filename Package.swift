@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Toast",
     platforms: [
-        .iOS(.v11),
+        .iOS(.v12),
         .tvOS(.v13),
         .visionOS(.v1)
     ],
