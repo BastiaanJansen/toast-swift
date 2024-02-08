@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(iOS) || os(watchOS)
+#if os(iOS)
 let titleTextSize = 14.0
 let subtitleTextSize = 12.0
 #else
