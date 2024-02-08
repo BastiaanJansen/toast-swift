@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,9 @@ import PackageDescription
 let package = Package(
     name: "Toast",
     platforms: [
-        .iOS(.v11), .tvOS(.v13)
+        .iOS(.v12),
+        .tvOS(.v13),
+        .visionOS(.v1)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
