@@ -26,7 +26,7 @@ public class Toast {
             return .black
         }
     }
-
+    
     private var multicast = MulticastDelegate<ToastDelegate>()
     
     public private(set) var config: ToastConfiguration
@@ -41,9 +41,13 @@ public class Toast {
         _ title: NSAttributedString,
         subtitle: NSAttributedString? = nil,
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
-        config: ToastConfiguration = ToastConfiguration()
+        config: ToastConfiguration = ToastConfiguration(),
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig)
+        let child = TextToastView(title, subtitle: subtitle,
+                                  actionTitle: actionTitle, action: action, viewConfig: viewConfig)
+        let view = AppleToastView(child: child, config: viewConfig)
         return self.init(view: view, config: config)
     }
     
@@ -57,9 +61,13 @@ public class Toast {
         _ title: String,
         subtitle: String? = nil,
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
-        config: ToastConfiguration = ToastConfiguration()
+        config: ToastConfiguration = ToastConfiguration(),
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig)
+        let child = TextToastView(title, subtitle: subtitle,
+                                  actionTitle: actionTitle, action: action, viewConfig: viewConfig)
+        let view = AppleToastView(child: child, config: viewConfig)
         return self.init(view: view, config: config)
     }
     
@@ -77,10 +85,19 @@ public class Toast {
         title: NSAttributedString,
         subtitle: NSAttributedString? = nil,
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
-        config: ToastConfiguration = ToastConfiguration()
+        config: ToastConfiguration = ToastConfiguration(),
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil
     ) -> Toast {
+        let child = IconAppleToastView(image: image,
+                                       imageTint: imageTint,
+                                       title: title,
+                                       subtitle: subtitle,
+                                       actionTitle: actionTitle,
+                                       action: action,
+                                       viewConfig: viewConfig)
         let view = AppleToastView(
-            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle, viewConfig: viewConfig),
+            child: child,
             config: viewConfig
         )
         return self.init(view: view, config: config)
@@ -100,10 +117,19 @@ public class Toast {
         title: String,
         subtitle: String? = nil,
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
-        config: ToastConfiguration = ToastConfiguration()
+        config: ToastConfiguration = ToastConfiguration(),
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil
     ) -> Toast {
+        let child = IconAppleToastView(image: image,
+                                       imageTint: imageTint,
+                                       title: title,
+                                       subtitle: subtitle,
+                                       actionTitle: actionTitle,
+                                       action: action,
+                                       viewConfig: viewConfig)
         let view = AppleToastView(
-            child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle, viewConfig: viewConfig),
+            child: child,
             config: viewConfig
         )
         return self.init(view: view, config: config)
@@ -162,12 +188,12 @@ public class Toast {
             self.backgroundView = backgroundView
             config.view?.addSubview(backgroundView) ?? ToastHelper.topController()?.view.addSubview(backgroundView)
         }
-
+        
         config.view?.addSubview(view) ?? ToastHelper.topController()?.view.addSubview(view)
         view.createView(for: self)
         
         multicast.invoke { $0.willShowToast(self) }
-
+        
         config.enteringAnimation.apply(to: self.view)
         let endBackgroundColor = backgroundView?.backgroundColor
         backgroundView?.backgroundColor = .clear
@@ -198,7 +224,7 @@ public class Toast {
     ///   - animated: A Boolean value that determines whether to apply animation.
     public func close(animated: Bool = true, completion: (() -> Void)? = nil) {
         multicast.invoke { $0.willCloseToast(self) }
-
+        
         UIView.animate(withDuration: config.animationTime,
                        delay: 0,
                        options: [.curveEaseIn, .allowUserInteraction],
@@ -335,3 +361,4 @@ extension Toast: Equatable {
         return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
 }
+

@@ -9,6 +9,19 @@ import Foundation
 import UIKit
 
 public class TextToastView : UIStackView {
+    
+    private let action: (() -> Void)?
+    
+    private lazy var vStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        
+        return stackView
+    }()
+    
     private lazy var titleLabel: UILabel = {
         UILabel()
     }()
@@ -17,36 +30,73 @@ public class TextToastView : UIStackView {
         UILabel()
     }()
     
-    public init(_ title: NSAttributedString, subtitle: NSAttributedString? = nil, viewConfig: ToastViewConfiguration) {
+    private lazy var actionButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.addTarget(self, action: #selector(actionButtonPressed(_ :)), for: .touchUpInside)
+        button.setTitleColor(UIColor(named: "SystemBlue"), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+        return button
+    }()
+    
+    public init(_ title: NSAttributedString,
+                subtitle: NSAttributedString? = nil,
+                actionTitle: String? = nil,
+                action: (() -> Void)? = nil,
+                viewConfig: ToastViewConfiguration) {
+        
+        self.action = action
         super.init(frame: CGRect.zero)
         commonInit()
         
         self.titleLabel.attributedText = title
         self.titleLabel.numberOfLines = viewConfig.titleNumberOfLines
-        addArrangedSubview(self.titleLabel)
+        self.vStack.addArrangedSubview(self.titleLabel)
         
         if let subtitle = subtitle {
             self.subtitleLabel.attributedText = subtitle
             self.subtitleLabel.numberOfLines = viewConfig.subtitleNumberOfLines
-            addArrangedSubview(subtitleLabel)
+            self.vStack.addArrangedSubview(self.subtitleLabel)
+        }
+        
+        addArrangedSubview(self.vStack)
+        
+        if let actionTitle = actionTitle {
+            setCustomSpacing(25, after: self.vStack)
+            self.actionButton.setTitle(actionTitle, for: .normal)
+            addArrangedSubview(self.actionButton)
+            setCustomSpacing(15, after: self.actionButton)
         }
     }
     
-    public init(_ title: String, subtitle: String? = nil, viewConfig: ToastViewConfiguration) {
+    public init(_ title: String,
+                subtitle: String? = nil,
+                actionTitle: String? = nil,
+                action: (() -> Void)? = nil,
+                viewConfig: ToastViewConfiguration) {
+        self.action = action
         super.init(frame: CGRect.zero)
         commonInit()
         
         self.titleLabel.text = title
         self.titleLabel.numberOfLines = viewConfig.titleNumberOfLines
         self.titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
-        addArrangedSubview(self.titleLabel)
+        self.vStack.addArrangedSubview(self.titleLabel)
         
         if let subtitle = subtitle {
             self.subtitleLabel.textColor = .systemGray
             self.subtitleLabel.text = subtitle
             self.subtitleLabel.numberOfLines = viewConfig.subtitleNumberOfLines
             self.subtitleLabel.font = .systemFont(ofSize: 12, weight: .bold)
-            addArrangedSubview(self.subtitleLabel)
+            self.vStack.addArrangedSubview(self.subtitleLabel)
+        }
+        
+        addArrangedSubview(self.vStack)
+        
+        if let actionTitle = actionTitle {
+            setCustomSpacing(25, after: self.vStack)
+            self.actionButton.setTitle(actionTitle, for: .normal)
+            addArrangedSubview(self.actionButton)
+            setCustomSpacing(15, after: self.actionButton)
         }
     }
     
@@ -55,8 +105,13 @@ public class TextToastView : UIStackView {
     }
     
     private func commonInit() {
-        axis = .vertical
+        axis = .horizontal
+        spacing = 15
         alignment = .center
-        distribution = .fillEqually
+        distribution = .fill
+    }
+    
+    @objc private func actionButtonPressed(_ sender: UIButton) {
+        action?()
     }
 }

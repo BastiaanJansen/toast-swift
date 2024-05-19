@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 
 public class IconAppleToastView : UIStackView {
+    
+    private let action: (() -> Void)?
+    
     private lazy var vStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -37,6 +40,14 @@ public class IconAppleToastView : UIStackView {
         UILabel()
     }()
     
+    private lazy var actionButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.addTarget(self, action: #selector(actionButtonPressed(_ :)), for: .touchUpInside)
+        button.setTitleColor(UIColor(named: "SystemBlue"), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+        return button
+    }()
+    
     public static var defaultImageTint: UIColor {
         if #available(iOS 13.0, *) {
             return .label
@@ -50,10 +61,15 @@ public class IconAppleToastView : UIStackView {
         imageTint: UIColor? = defaultImageTint,
         title: NSAttributedString,
         subtitle: NSAttributedString? = nil,
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil,
         viewConfig: ToastViewConfiguration
     ) {
+        
+        self.action = action
         super.init(frame: CGRect.zero)
         commonInit()
+        
         
         self.titleLabel.attributedText = title
         self.titleLabel.numberOfLines = viewConfig.titleNumberOfLines
@@ -70,10 +86,26 @@ public class IconAppleToastView : UIStackView {
         
         addArrangedSubview(self.imageView)
         addArrangedSubview(self.vStack)
+        
+        if let actionTitle = actionTitle {
+            setCustomSpacing(25, after: self.vStack)
+            self.actionButton.setTitle(actionTitle, for: .normal)
+            addArrangedSubview(self.actionButton)
+            setCustomSpacing(15, after: self.actionButton)
+        }
     }
-
-    public init(image: UIImage, imageTint: UIColor? = defaultImageTint, title: String, subtitle: String? = nil, viewConfig: ToastViewConfiguration) {
+    
+    public init(image: UIImage,
+                imageTint: UIColor? = defaultImageTint,
+                title: String,
+                subtitle: String? = nil,
+                actionTitle: String? = nil,
+                action: (() -> Void)? = nil,
+                viewConfig: ToastViewConfiguration) {
+        
+        self.action = action
         super.init(frame: CGRect.zero)
+        
         commonInit()
         
         self.titleLabel.text = title
@@ -94,6 +126,13 @@ public class IconAppleToastView : UIStackView {
         
         addArrangedSubview(self.imageView)
         addArrangedSubview(self.vStack)
+        
+        if let actionTitle = actionTitle {
+            setCustomSpacing(25, after: self.vStack)
+            self.actionButton.setTitle(actionTitle, for: .normal)
+            addArrangedSubview(self.actionButton)
+            setCustomSpacing(15, after: self.actionButton)
+        }
     }
     
     required init(coder: NSCoder) {
@@ -105,5 +144,9 @@ public class IconAppleToastView : UIStackView {
         spacing = 15
         alignment = .center
         distribution = .fill
+    }
+    
+    @objc private func actionButtonPressed(_ sender: UIButton) {
+        action?()
     }
 }
