@@ -41,6 +41,7 @@ public class TextToastView : UIStackView {
     public init(_ title: NSAttributedString,
                 subtitle: NSAttributedString? = nil,
                 actionTitle: String? = nil,
+                actionButtonColor: UIColor? = nil,
                 action: (() -> Void)? = nil,
                 viewConfig: ToastViewConfiguration) {
         
@@ -66,11 +67,16 @@ public class TextToastView : UIStackView {
             addArrangedSubview(self.actionButton)
             setCustomSpacing(15, after: self.actionButton)
         }
+        
+        if let actionButtonColor = actionButtonColor {
+            actionButton.setTitleColor(actionButtonColor, for: .normal)
+        }
     }
     
     public init(_ title: String,
                 subtitle: String? = nil,
                 actionTitle: String? = nil,
+                actionButtonColor: UIColor? = nil,
                 action: (() -> Void)? = nil,
                 viewConfig: ToastViewConfiguration) {
         self.action = action
@@ -97,6 +103,10 @@ public class TextToastView : UIStackView {
             self.actionButton.setTitle(actionTitle, for: .normal)
             addArrangedSubview(self.actionButton)
             setCustomSpacing(15, after: self.actionButton)
+        }
+        
+        if let actionButtonColor = actionButtonColor {
+            actionButton.setTitleColor(actionButtonColor, for: .normal)
         }
     }
     

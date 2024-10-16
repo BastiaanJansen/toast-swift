@@ -43,10 +43,11 @@ public class Toast {
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
         config: ToastConfiguration = ToastConfiguration(),
         actionTitle: String? = nil,
+        actionButtonColor: UIColor? = nil,
         action: (() -> Void)? = nil
     ) -> Toast {
         let child = TextToastView(title, subtitle: subtitle,
-                                  actionTitle: actionTitle, action: action, viewConfig: viewConfig)
+                                  actionTitle: actionTitle, actionButtonColor: actionButtonColor, action: action, viewConfig: viewConfig)
         let view = AppleToastView(child: child, config: viewConfig)
         return self.init(view: view, config: config)
     }
@@ -63,10 +64,11 @@ public class Toast {
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
         config: ToastConfiguration = ToastConfiguration(),
         actionTitle: String? = nil,
+        actionButtonColor: UIColor? = nil,
         action: (() -> Void)? = nil
     ) -> Toast {
         let child = TextToastView(title, subtitle: subtitle,
-                                  actionTitle: actionTitle, action: action, viewConfig: viewConfig)
+                                  actionTitle: actionTitle, actionButtonColor: actionButtonColor, action: action, viewConfig: viewConfig)
         let view = AppleToastView(child: child, config: viewConfig)
         return self.init(view: view, config: config)
     }
