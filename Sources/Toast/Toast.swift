@@ -199,6 +199,8 @@ public class Toast {
     public func close(animated: Bool = true, completion: (() -> Void)? = nil) {
         multicast.invoke { $0.willCloseToast(self) }
 
+        closeTimer?.invalidate()
+        
         UIView.animate(withDuration: config.animationTime,
                        delay: 0,
                        options: [.curveEaseIn, .allowUserInteraction],
