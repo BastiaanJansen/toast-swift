@@ -38,14 +38,14 @@ public class TextToastView : UIStackView {
         
         self.titleLabel.text = title
         self.titleLabel.numberOfLines = viewConfig.titleNumberOfLines
-        self.titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
+        self.titleLabel.font = .systemFont(ofSize: titleTextSize, weight: .bold)
         addArrangedSubview(self.titleLabel)
         
         if let subtitle = subtitle {
             self.subtitleLabel.textColor = .systemGray
             self.subtitleLabel.text = subtitle
             self.subtitleLabel.numberOfLines = viewConfig.subtitleNumberOfLines
-            self.subtitleLabel.font = .systemFont(ofSize: 12, weight: .bold)
+            self.subtitleLabel.font = .systemFont(ofSize: subtitleTextSize, weight: .bold)
             addArrangedSubview(self.subtitleLabel)
         }
     }
