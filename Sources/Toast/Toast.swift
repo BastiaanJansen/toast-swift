@@ -163,8 +163,11 @@ public class Toast {
             config.view?.addSubview(backgroundView) ?? ToastHelper.topController()?.view.addSubview(backgroundView)
         }
 
-        config.view?.addSubview(view) ?? ToastHelper.topController()?.view.addSubview(view)
-        view.createView(for: self)
+        UIView.performWithoutAnimation {
+            config.view?.addSubview(view) ?? ToastHelper.topController()?.view.addSubview(view)
+            view.createView(for: self)
+            view.layoutIfNeeded()
+        }
         
         multicast.invoke { $0.willShowToast(self) }
 
