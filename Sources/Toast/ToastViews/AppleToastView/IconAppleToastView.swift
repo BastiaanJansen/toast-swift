@@ -53,6 +53,7 @@ public class IconAppleToastView : UIStackView {
         viewConfig: ToastViewConfiguration
     ) {
         super.init(frame: CGRect.zero)
+        alignment = viewConfig.textAlignment
         commonInit()
         
         self.titleLabel.attributedText = title
@@ -74,6 +75,7 @@ public class IconAppleToastView : UIStackView {
 
     public init(image: UIImage, imageTint: UIColor? = defaultImageTint, title: String, subtitle: String? = nil, viewConfig: ToastViewConfiguration) {
         super.init(frame: CGRect.zero)
+        alignment = viewConfig.textAlignment
         commonInit()
         
         self.titleLabel.text = title
@@ -103,7 +105,6 @@ public class IconAppleToastView : UIStackView {
     private func commonInit() {
         axis = .horizontal
         spacing = 15
-        alignment = .center
         distribution = .fill
     }
 }
