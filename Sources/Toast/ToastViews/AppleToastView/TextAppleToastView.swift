@@ -19,6 +19,7 @@ public class TextToastView : UIStackView {
     
     public init(_ title: NSAttributedString, subtitle: NSAttributedString? = nil, viewConfig: ToastViewConfiguration) {
         super.init(frame: CGRect.zero)
+        commonInit()
         alignment = viewConfig.textAlignment
 
         self.titleLabel.attributedText = title
@@ -34,6 +35,7 @@ public class TextToastView : UIStackView {
     
     public init(_ title: String, subtitle: String? = nil, viewConfig: ToastViewConfiguration) {
         super.init(frame: CGRect.zero)
+        commonInit()
         alignment = viewConfig.textAlignment
 
         self.titleLabel.text = title
