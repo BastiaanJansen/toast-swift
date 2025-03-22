@@ -19,8 +19,8 @@ public class TextToastView : UIStackView {
     
     public init(_ title: NSAttributedString, subtitle: NSAttributedString? = nil, viewConfig: ToastViewConfiguration) {
         super.init(frame: CGRect.zero)
-        commonInit()
-        
+        alignment = viewConfig.textAlignment
+
         self.titleLabel.attributedText = title
         self.titleLabel.numberOfLines = viewConfig.titleNumberOfLines
         addArrangedSubview(self.titleLabel)
@@ -34,8 +34,8 @@ public class TextToastView : UIStackView {
     
     public init(_ title: String, subtitle: String? = nil, viewConfig: ToastViewConfiguration) {
         super.init(frame: CGRect.zero)
-        commonInit()
-        
+        alignment = viewConfig.textAlignment
+
         self.titleLabel.text = title
         self.titleLabel.numberOfLines = viewConfig.titleNumberOfLines
         self.titleLabel.font = .systemFont(ofSize: 14, weight: .bold)
@@ -48,6 +48,7 @@ public class TextToastView : UIStackView {
             self.subtitleLabel.font = .systemFont(ofSize: 12, weight: .bold)
             addArrangedSubview(self.subtitleLabel)
         }
+
     }
     
     required init(coder: NSCoder) {
@@ -56,7 +57,6 @@ public class TextToastView : UIStackView {
     
     private func commonInit() {
         axis = .vertical
-        alignment = .center
         distribution = .fillEqually
     }
 }
