@@ -15,12 +15,19 @@ public class AppleToastView : UIView, ToastView {
     
     private var toast: Toast?
     
+    private let fixedHeight: CGFloat?
+    private let fixedWidth: CGFloat?
+    
     public init(
         child: UIView,
-        config: ToastViewConfiguration = ToastViewConfiguration()
+        config: ToastViewConfiguration = ToastViewConfiguration(),
+        fixedHeight: CGFloat? = nil,
+        fixedWidth: CGFloat? = nil
     ) {
         self.config = config
         self.child = child
+        self.fixedHeight = fixedHeight
+        self.fixedWidth = fixedWidth
         super.init(frame: .zero)
         
         addSubview(child)
@@ -36,13 +43,30 @@ public class AppleToastView : UIView, ToastView {
         guard let superview = superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(greaterThanOrEqualToConstant: config.minHeight),
-            widthAnchor.constraint(greaterThanOrEqualToConstant: config.minWidth),
+        var constraints: [NSLayoutConstraint] = [
             leadingAnchor.constraint(greaterThanOrEqualTo: superview.leadingAnchor, constant: 10),
             trailingAnchor.constraint(lessThanOrEqualTo: superview.trailingAnchor, constant: -10),
             centerXAnchor.constraint(equalTo: superview.centerXAnchor)
-        ])
+        ]
+        
+        /// Height:
+        /// - If a fixed height is provided, enforce an exact height (==).
+        /// - Otherwise, only enforce a minimum (≥) so the view can expand with content.
+        if let fixedHeight = fixedHeight {
+            constraints.append(heightAnchor.constraint(equalToConstant: fixedHeight))
+        } else {
+            constraints.append(heightAnchor.constraint(greaterThanOrEqualToConstant: config.minHeight))
+        }
+
+        /// Width:
+        /// - If a fixed width is provided, enforce an exact width (==).
+        /// - Otherwise, only enforce a minimum (≥); actual width will be determined
+        ///   by content size up to the available space (bounded by leading/trailing).
+        if let fixedWidth = fixedWidth {
+            constraints.append(widthAnchor.constraint(equalToConstant: fixedWidth))
+        } else {
+            constraints.append(widthAnchor.constraint(greaterThanOrEqualToConstant: config.minWidth))
+        }
         
         switch toast.config.direction {
         case .bottom:
@@ -53,6 +77,7 @@ public class AppleToastView : UIView, ToastView {
             centerYAnchor.constraint(equalTo: superview.layoutMarginsGuide.centerYAnchor, constant: 0).isActive = true
         }
         
+        NSLayoutConstraint.activate(constraints)
         addSubviewConstraints()
         DispatchQueue.main.async {
             self.style()
