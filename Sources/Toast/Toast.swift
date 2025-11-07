@@ -43,7 +43,7 @@ public class Toast {
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig)
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig, fixedHeight: config.fixedSize?.height, fixedWidth: config.fixedSize?.width)
         return self.init(view: view, config: config)
     }
     
@@ -59,7 +59,7 @@ public class Toast {
         viewConfig: ToastViewConfiguration = ToastViewConfiguration(),
         config: ToastConfiguration = ToastConfiguration()
     ) -> Toast {
-        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig)
+        let view = AppleToastView(child: TextToastView(title, subtitle: subtitle, viewConfig: viewConfig), config: viewConfig, fixedHeight: config.fixedSize?.height, fixedWidth: config.fixedSize?.width)
         return self.init(view: view, config: config)
     }
     
@@ -81,7 +81,7 @@ public class Toast {
     ) -> Toast {
         let view = AppleToastView(
             child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle, viewConfig: viewConfig),
-            config: viewConfig
+            config: viewConfig, fixedHeight: config.fixedSize?.height, fixedWidth: config.fixedSize?.width
         )
         return self.init(view: view, config: config)
     }
@@ -104,7 +104,7 @@ public class Toast {
     ) -> Toast {
         let view = AppleToastView(
             child: IconAppleToastView(image: image, imageTint: imageTint, title: title, subtitle: subtitle, viewConfig: viewConfig),
-            config: viewConfig
+            config: viewConfig, fixedHeight: config.fixedSize?.height, fixedWidth: config.fixedSize?.width
         )
         return self.init(view: view, config: config)
     }
