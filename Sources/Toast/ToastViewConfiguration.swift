@@ -22,6 +22,10 @@ public struct ToastViewConfiguration {
 
     public let textAlignment: UIStackView.Alignment
 
+    public let shadowOffset: CGSize
+    public let shadowColor: UIColor
+    public let shadowOpacity: Float
+
     public init(
         minHeight: CGFloat = 58,
         minWidth: CGFloat = 150,
@@ -30,7 +34,10 @@ public struct ToastViewConfiguration {
         titleNumberOfLines: Int = 1,
         subtitleNumberOfLines: Int = 1,
         cornerRadius: CGFloat? = nil,
-        textAlignment: UIStackView.Alignment = .center
+        textAlignment: UIStackView.Alignment = .center,
+        shadowOffset: CGSize = CGSize(width: 0, height: 4),
+        shadowColor: UIColor = .black.withAlphaComponent(0.08),
+        shadowOpacity: Float = 1
     ) {
         self.minHeight = minHeight
         self.minWidth = minWidth
@@ -40,5 +47,8 @@ public struct ToastViewConfiguration {
         self.subtitleNumberOfLines = subtitleNumberOfLines
         self.cornerRadius = cornerRadius
         self.textAlignment = textAlignment
+        self.shadowOffset = shadowOffset
+        self.shadowColor = shadowColor
+        self.shadowOpacity = shadowOpacity
     }
 }

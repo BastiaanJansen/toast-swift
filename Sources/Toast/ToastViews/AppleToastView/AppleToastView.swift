@@ -116,10 +116,12 @@ public class AppleToastView : UIView, ToastView {
     
     private func addShadow() {
         layer.masksToBounds = false
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowColor = UIColor.black.withAlphaComponent(0.08).cgColor
-        layer.shadowOpacity = 1
+
         layer.shadowRadius = 8
+
+        layer.shadowOffset = config.shadowOffset
+        layer.shadowColor = config.shadowColor.cgColor
+        layer.shadowOpacity = config.shadowOpacity
     }
     
     required init?(coder: NSCoder) {
