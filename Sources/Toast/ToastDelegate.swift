@@ -19,6 +19,8 @@ public protocol ToastDelegate: AnyObject {
     ///   - toast: The toast that was just shown.
     func didShowToast(_ toast: Toast)
 
+    func didTapToast(_ toast: Toast)
+
     /// Delegate function that will be called before the Toast is closed.
     /// - Parameters:
     ///   - toast: The toast that will be closed.
@@ -36,6 +38,8 @@ extension ToastDelegate {
     func willShowToast(_ toast: Toast) {}
 
     func didShowToast(_ toast: Toast) {}
+
+    func didTapToast(_ toast: Toast) {}
 
     func willCloseToast(_ toast: Toast) {}
 

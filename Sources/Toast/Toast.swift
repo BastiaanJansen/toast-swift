@@ -307,6 +307,7 @@ public extension Toast {
     
     @objc func toastOnTap(_ gesture: UITapGestureRecognizer) {
         closeTimer?.invalidate()
+        multicast.invoke({ $0.didTapToast(self) })
         close()
     }
     
